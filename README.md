@@ -1,7 +1,7 @@
 # NOAA-DSB
 
 ### A student project for the P&S Software Defined Radio @ ETH Zurich
-NOAA-DSB is a satellite receiver, demodulator and decoder for the [DSB](https://www.sigidwiki.com/wiki/NOAA_Direct_Sounder_Broadcast_(DSB) signal of NOAA weather satellites.
+NOAA-DSB is a satellite receiver, demodulator and decoder for the [DSB](https://www.sigidwiki.com/wiki/NOAA_Direct_Sounder_Broadcast_(DSB)) signal of NOAA weather satellites.
 
 #### Further Information is available here:
 
