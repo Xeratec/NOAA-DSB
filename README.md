@@ -16,7 +16,7 @@ NOAA-DSB is a satellite receiver, demodulator and decoder for the [DSB](https://
 *Python* - [julianmer](https://github.com/julianmer)
 
 **Sevrin Mathys** (ETHZ Bsc ETIT)  
-*Python* -
+*GnuRadio, Python* - [SevyRide](https://github.com/SevyRide)
 
 # Usage
 ### Dependencies
