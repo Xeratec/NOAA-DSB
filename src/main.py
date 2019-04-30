@@ -29,9 +29,9 @@ for string in rawStream:
 wordStream = [[]]
 
 
-#*******************************************************#
-#   look for sync word while looping threw bit stream   #
-#*******************************************************#
+#*********************************************************#
+#   look for sync word while looping through bit stream   #
+#*********************************************************#
 syncWord = '11101101111000100000AAAA'      # where last 4 bits (AAAA) are spacecraft ID
                                            # TODO: find spacecraft ID
 i = 0
