@@ -17,11 +17,11 @@
 #*********************************#
 #   load bit stream or waveform   #
 #*********************************#
-# rawStream = open("../TestFiles/NotMinePackedOut.txt").read()
+# rawStream = open("test/NotMinePackedOut.txt").read()
 bitStream = ''
 
 # !!! use below when reading hex file
-rawStream = open("../TestFiles/TestMinorFrame.txt").read()
+rawStream = open("test/TestMinorFrame.txt").read()
 rawStream = rawStream[:-1].replace(" ", "")
 
 for elem in rawStream:
