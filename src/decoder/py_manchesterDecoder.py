@@ -2,23 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-File name: py_manchesterDcoder.py
+File name: py_manchesterDecoder.py
 Author: Philip Wiese
 Date created: 15.05.2019
 Date last modified: 15.05.2019
 Python Version: 3
 
 Example:
-    Examples can be given using either the ``Example`` or ``Examples``
-    sections. Sections support any reStructuredText formatting, including
-    literal blocks::
-
-        $ python py_manchesterDecoder.py -f ../../RandomGnuRadioStuff/6_bits_dcblock2.raw  -v 2 -c 1996800 -i 1
-        $ python py_manchesterDecoder.py -f ../test/demod_imag.raw  -v 2 -c -1 -i 0
-
-Todo:
-    * Perform parity checks
-    * Save output
+    $ python py_manchesterDecoder.py -f ../../RandomGnuRadioStuff/6_bits_dcblock2.raw -v 1 -i 1
+    $ python py_manchesterDecoder.py -f ../test/demod_imag.raw -v 2 -o "NOA-18.txt"
 """
 
 
@@ -26,25 +18,12 @@ import numpy as np
 from bitarray import bitarray
 from tqdm import tqdm
 from scipy import stats
-
 import sys
 
 CLI_WIDTH = 64
 
-SyncWord = '1110110111100010000' #0100'; %NOAA15 ID last 4 0100
-SyncWordInverse = '0001001000011101111' #1011'; %NOAA15 ID
-
+SyncWord = bitarray('1110110111100010000')
 dt = 1 / (8320 * 2)
-
-def str2hex(data):
-    """Convert a string to their hex representation"""
-    tmp = ''
-    for e in range(0, len(data), 2):
-        # Grab 2 characters and decode them as their hex values
-        tmp += data[e:e + 2].decode('hex_codec')
-    return tmp
-
-
 
 def usage():
     """Prints help message."""
@@ -53,12 +32,12 @@ def usage():
     print("-i [0,1]:   Specify input format")
     print("              0: Real Values (default)")
     print("              1: Complex Values")
-    print("-v <level>: Enable verbose logging. 1-3 (low-high)")
+    print("-v <level>: Enable verbose logging. 0-3 (low-high)")
     print("-o <file>:  Output file (default=NOAA_DSB_MinorFrames.txt)")
     sys.exit()
 
 
-def manchester_decode_nebarnix(bss, bs):
+def manchester_decode_nebarnix(bss, bs, status=True):
     """Manchester decodes bitstream based on bitstrenght from GRC
     Based on the algorithm of nebarnix
     Source: <http://wiki.nebarnix.com/w/images/e/e0/POES.m>
@@ -75,7 +54,7 @@ def manchester_decode_nebarnix(bss, bs):
     clockmod = 0
     errx = []
 
-    with tqdm(total=len(bss), ncols=CLI_WIDTH, unit='bit', unit_scale=True) as pbar:
+    with tqdm(total=len(bss), ncols=CLI_WIDTH, unit='bit', unit_scale=True, disable=not status) as pbar:
         for idx in range(1,bs.length()-1):
             # If not a bit boundary, see if it should be and we're out of sync
             # But only resync on strong bits
@@ -104,13 +83,13 @@ def manchester_decode_nebarnix(bss, bs):
     return bsd
 
 
-def gen_bitstream(bss):
+def gen_bitstream(bss, status=True):
     """Generate bitstream from strenght array
 
     :param bss: array. float stream representing bit strength
     :return bs: bitarray. bitstream
     """
-    with tqdm(total=len(bss), ncols=CLI_WIDTH, unit='bit', unit_scale=True) as pbar:
+    with tqdm(total=len(bss), ncols=CLI_WIDTH, unit='bit', unit_scale=True, disable=not status) as pbar:
         bs = bitarray()
         for c in bss:
             pbar.update(1)
@@ -143,7 +122,7 @@ def compare_bs(bs1, bs2, perLine=64):
             print(result)
 
 
-def print_format(bs, perLine):
+def print_format(bs, perLine=64):
     """Print bitarray with <perLine> Values per line with line counter
 
     :param bs: bitarray. bitsream
@@ -153,9 +132,40 @@ def print_format(bs, perLine):
     for i in range(0, bs.length(), perLine):
         print("%04d: %s" % (i//perLine,bs[i:i+perLine].to01()))
 
+def party_check(minorFrame):
+    """Perform parity check on minor frame
+
+    :param minorFrame: bitarray.
+    :return valid: bool.
+    """
+
+    # Word 103
+    # Bit 1: CPU B data transfer incomplete bit
+    # Bit 2: CPU A data transfer incomplete bit
+    # Bit 3: Even parity check in words 2 through 18
+    # Bit 4: Even parity check in words 19 thru 35
+    # Bit 5: Even parity check in words 36 thru 52
+    # Bit 6: Even parity check in words 53 thru 69
+    # Bit 7: Even parity check in words 70 thru 86
+    # Bit 8: Even parity check in words 87 thru bit 7 of word 103
+
+    if minorFrame[2 * 8:19 * 8].count(1) % 2 != minorFrame[103*8 + 2]:
+        return False
+    if minorFrame[19 * 8:36 * 8].count(1) % 2 != minorFrame[103*8 + 3]:
+        return False
+    if minorFrame[36 * 8:53 * 8].count(1) % 2 != minorFrame[103*8 + 4]:
+        return False
+    if minorFrame[53 * 8:70 * 8].count(1) % 2 != minorFrame[103*8 + 5]:
+        return False
+    if minorFrame[70 * 8:87 * 8].count(1) % 2 != minorFrame[103*8 + 6]:
+        return False
+    if minorFrame[87 * 8:103 * 8 + 7].count(1) % 2 != minorFrame[103*8 + 7]:
+        return False
+
+    return True
+
 
 def main():
-    """Main code of the programm"""
     bitStreamStrength = []
 
     # Set values
@@ -164,6 +174,9 @@ def main():
     num = -1
     verbose = 0;
     bsFormat = 0;
+
+    SyncWordInverse = bitarray(SyncWord)
+    SyncWordInverse.invert()
 
     # Process Options
     ops = ['-f', '-c', '-v', '-i', '-o']
@@ -200,17 +213,17 @@ def main():
 
     RawTime = np.linspace(0, dt * len(bitStreamStrength), len(bitStreamStrength))
 
-
-    print('[INFO] Size: %d' % len(bitStreamStrength))
-    print('[INFO] Duration: %0.2fs' % RawTime[-1])
+    if verbose > 0:
+        print('[INFO] Size: %d' % len(bitStreamStrength))
+        print('[INFO] Duration: %0.2fs' % RawTime[-1])
 
     # Generate bitstream based on strength
     if verbose > 0: print("[INFO] Generate bitstream")
-    bitStream = gen_bitstream(bitStreamStrength)
+    bitStream = gen_bitstream(bitStreamStrength, verbose)
 
     # Manchester decode bitstream
     if verbose > 0: print("[INFO] Decode bitstream")
-    bitStreamDecoded = manchester_decode_nebarnix(bitStreamStrength, bitStream)
+    bitStreamDecoded = manchester_decode_nebarnix(bitStreamStrength, bitStream, verbose)
 
     # For dev purpose
     # to compare Matlab output
@@ -234,11 +247,10 @@ def main():
         print_format(bitStreamDecoded, CLI_WIDTH)
 
     # Search for SyncWord
-    idxSyncWord = bitStreamDecoded.search(bitarray(SyncWord))
-    idxSyncWordInv = bitStreamDecoded.search(bitarray(SyncWordInverse))
+    idxSyncWord = bitStreamDecoded.search(SyncWord)
+    idxSyncWordInv = bitStreamDecoded.search(SyncWordInverse)
 
-
-    if verbose >0:
+    if verbose > 0:
         print("[INFO] Found: %d normal and %d inverted syncword" % (len(idxSyncWord), len(idxSyncWordInv)))
         matchLength = np.sum(np.mod(np.diff(idxSyncWord), 832) == 0) + np.sum(np.mod(np.diff(idxSyncWordInv), 832) == 0)
         print("[INFO] Match length: %d" % matchLength)
@@ -254,7 +266,11 @@ def main():
 
     # Build minorFrames
     for idx in idxSyncWordAll:
-        frame = bitarray(bitStreamDecoded[idx:idx+102])
+        frame = bitarray(bitStreamDecoded[idx:idx+104*8])
+
+        # Skip uncomplete frame
+        if frame.length() != 832: continue
+
         if idx in idxSyncWord:
             minorFrames.append(frame)
         if idx in idxSyncWordInv:
@@ -266,7 +282,7 @@ def main():
     for mf in minorFrames:
         spacecrafts.append(int(mf[16:24].to01(),2))
 
-    if verbose > 1:
+    if verbose > 2:
         for idx in range(0,len(minorFrames)):
             print()
             print("[INFO] Frame ", idx+1)
@@ -278,15 +294,48 @@ def main():
     spacecraft = stats.mode(spacecrafts)[0][0]
 
     if spacecraft == 8:
-        print("[INFO] ID: %d => NOAA-15" % spacecraft)
+        print("[INFO] Detected Satellite: %d => NOAA-15" % spacecraft)
     elif spacecraft == 13:
-        print("[INFO] ID: %d => NOAA-18" % spacecraft)
+        print("[INFO] Detected Satellite: %d => NOAA-18" % spacecraft)
     elif spacecraft == 15:
-        print("[INFO] ID: %d => NOAA-19" % spacecraft)
+        print("[INFO] Detected Satellite: %d => NOAA-19" % spacecraft)
     else:
-        print("[INFO] ID: %d => UFO!!" % spacecraft)
+        print("[INFO] Detected Satellite: %d => UFO!!" % spacecraft)
 
-    # Perform parity checks
+    # Parity checks
+    tmpMinorFrames= []
+    for idx in range(0, len(minorFrames)):
+        if not party_check(minorFrames[idx]):
+            if verbose > 1:
+                print()
+                print("[WARN] Error in frame %d" % idx)
+                print_format(minorFrames[idx], CLI_WIDTH)
+        else:
+            tmpMinorFrames.append(minorFrames[idx])
+    minorFrames = tmpMinorFrames.copy()
+
+    print("[INFO] Error free frames: ", len(minorFrames))
+
+    # Save output to file
+    try:
+        outputFiledescriptor = open(outputFilename, "w")
+    except:
+        print("Error accessing file:", outputFilename)
+        usage()
+
+    if verbose > 0:
+        print("[INFO] Saving data to ", outputFilename)
+
+    with tqdm(total=len(minorFrames), ncols=CLI_WIDTH, unit='bit', unit_scale=True, disable=not verbose) as pbar:
+        for idx in range(0, len(minorFrames)):
+            mfHex = ''.join("%02X " % x for x in minorFrames[idx].tobytes())
+            outputFiledescriptor.write(mfHex + '\n')
+            pbar.update(1)
+
+    outputFiledescriptor.close()
+
+
+    print("Done.")
 
 
 if __name__ == "__main__":
