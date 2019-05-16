@@ -2,15 +2,15 @@
 # -*- coding: utf-8 -*-
 
 """
-File name: py_manchesterDecoder.py
+File name: noaa_decode.py
 Author: Philip Wiese
 Date created: 15.05.2019
 Date last modified: 15.05.2019
 Python Version: 3
 
 Example:
-    $ python py_manchesterDecoder.py -f ../../RandomGnuRadioStuff/6_bits_dcblock2.raw -v 1 -i 1
-    $ python py_manchesterDecoder.py -f ../test/demod_imag.raw -v 2 -o "NOA-18.txt"
+    $ python noaa_decode.py -f ../../RandomGnuRadioStuff/6_bits_dcblock2.raw -v 1 -i 1
+    $ python noaa_decode.py -f ../test/demod_imag.raw -v 2 -o "NOA-18.txt"
 """
 
 
@@ -27,13 +27,14 @@ dt = 1 / (8320 * 2)
 
 def usage():
     """Prints help message."""
-    print("-f <file>:  Input file (required)")
-    print("-c <size>:  Number of bytes to analyze (-1 for everything)")
-    print("-i [0,1]:   Specify input format")
-    print("              0: Real Values (default)")
-    print("              1: Complex Values")
-    print("-v <level>: Enable verbose logging. 0-3 (low-high)")
-    print("-o <file>:  Output file (default=NOAA_DSB_MinorFrames.txt)")
+    print("Usage:")
+    print("     -f <file>:  Input file (required)")
+    print("     -c <size>:  Number of bytes to analyze (-1 for everything)")
+    print("     -i [0,1]:   Specify input format")
+    print("                   0: Real Values (default)")
+    print("                   1: Complex Values")
+    print("     -v <level>: Enable verbose logging. 0-3 (low-high)")
+    print("     -o <file>:  Output file (default=NOAA_DSB_MinorFrames.txt)")
     sys.exit()
 
 
@@ -333,7 +334,6 @@ def main():
             pbar.update(1)
 
     outputFiledescriptor.close()
-
 
     print("Done.")
 
