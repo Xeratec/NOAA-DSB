@@ -126,3 +126,7 @@ dmypy.json
 #GRC output
 top_block.py
 *.raw
+
+.idea/
+
+*.mat
