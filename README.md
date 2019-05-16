@@ -19,19 +19,31 @@ NOAA-DSB is a satellite receiver, demodulator and decoder for the [DSB](https://
 *GnuRadio, Python* - [SevyRide](https://github.com/SevyRide)
 
 # Usage
+Demodulate Raw I/Q audio from gqrx or similar programs
+```sh
+$ python2.7 src/demodulator/noaa_demodulate.py -f recordings/samples/POES_56k250.raw -r 56250
+```
+
+Extract TIP frames
+```sh
+$ python src/decoder/noaa_decode.py -f demod.raw -v 1
+```
+
+Decode TIP frames
+```sh
+TODO
+```
+
 ### Dependencies
 The project has the following dependencies, make sure you have them all installed:
 - Python2.7
+- Python3
+- tqdm (Python3)
 - gnuradio
 - SciPy
 
-### Demo
-
-
 # ToDo
-* Antenna
-* Demodulator
-* Decoder
+* Telemetry Decoder
 * Documentation
 
 # Links for Developer

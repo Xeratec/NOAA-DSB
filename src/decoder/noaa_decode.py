@@ -10,7 +10,7 @@ Python Version: 3
 
 Example:
     $ python noaa_decode.py -f ../../RandomGnuRadioStuff/6_bits_dcblock2.raw -v 1 -i 1
-    $ python noaa_decode.py -f ../test/demod_imag.raw -v 2 -o "NOA-18.txt"
+    $ python noaa_decode.py -f ../test/demod_imag.raw -v 2 -o ../test/NOAA-18.txt
 """
 
 

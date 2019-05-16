@@ -9,9 +9,8 @@ Date last modified: 16.05.2019
 Python Version: 2.7
 
 Example:
-    $ python noaa_decode.py -f ../../RandomGnuRadioStuff/6_bits_dcblock2.raw -v 1 -i 1
+    $ python2.7 noaa_demodulate.py -f ../../recordings/samples/POES_56k250.raw -r 56250 -o ../test/demod_imag.raw
 """
-
 
 from gnuradio import analog
 from gnuradio import blocks
@@ -26,7 +25,7 @@ def usage():
     """Prints help message."""
     print("Usage:")
     print("     -f <file>:         Input file (required)")
-    print("     -s sample_rate:    Sample rate (default=56200)")
+    print("     -r sample_rate:    Sample rate (default=56200)")
     print("     -i [0,1]:          Specify output format")
     print("                          0: Real Values (default)")
     print("                          1: Complex Values")
@@ -113,7 +112,7 @@ def main():
     sampleRate = 56250
 
     # Process Options
-    ops = ['-f', '-i', '-o']
+    ops = ['-f', '-i', '-o', '-r']
 
     while len(sys.argv) > 1:
         op = sys.argv.pop(1)
@@ -121,6 +120,8 @@ def main():
             filename = sys.argv.pop(1)
         if op == '-i':
             bsFormat = int(sys.argv.pop(1))
+        if op == '-r':
+            sampleRate = int(sys.argv.pop(1))
         if op == '-o':
             outputFilename = sys.argv.pop(1)
         if op not in ops:
