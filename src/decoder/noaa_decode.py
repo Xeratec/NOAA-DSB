@@ -1,11 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
 """
 File name: noaa_decode.py
 Author: Philip Wiese
 Date created: 15.05.2019
-Date last modified: 15.05.2019
+Date last modified: 17.05.2019
 Python Version: 3
 
 Example:

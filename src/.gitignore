@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+﻿# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -130,3 +130,5 @@ top_block.py
 .idea/
 
 *.mat
+
+NOAA_DSB_MinorFrames.txt
