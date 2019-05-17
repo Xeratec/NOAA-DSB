@@ -45,10 +45,10 @@ def manchester_decode_nebarnix(bss, bs, status=True):
 
     :param bss: array. float stream representing bit strength
     :param bs: bitarray. Input bit stream
+    :param status: boolean. show progress bar
     :return bsd: bitarray. decoded bitstream
     """
-
-    bsd = bitarray()
+    bsd = bitarray(len(bss//2))
 
     bitThreshold = 0.8
     idx2 = 10
@@ -56,7 +56,7 @@ def manchester_decode_nebarnix(bss, bs, status=True):
     errx = []
 
     with tqdm(total=len(bss), ncols=CLI_WIDTH, unit='bit', unit_scale=True, disable=not status) as pbar:
-        for idx in range(1,bs.length()-1):
+        for idx in range(1,bs.length()-3):
             # If not a bit boundary, see if it should be and we're out of sync
             # But only resync on strong bits
             if ((idx % 2) == clockmod):
@@ -70,57 +70,56 @@ def manchester_decode_nebarnix(bss, bs, status=True):
             if ((idx % 2) != clockmod):
                 if (abs(bss[idx]) > abs(bss[idx+1])):
                     if (bs[idx] == 1):
-                        bsd.append(0)
+                        bsd[idx2] = 0
                     else:
-                        bsd.append(1)
+                        bsd[idx2] = 1
                 else:
                     if (bs[idx+1] == 1):
-                        bsd.append(1)
+                        bsd[idx2] = 1
                     else:
-                        bsd.append(0)
+                        bsd[idx2] = 0
                 idx2 = idx2 + 1
-            pbar.update(1)
+            if idx % 1000 == 0: pbar.update(1000)
 
     return bsd
 
 
-def gen_bitstream(bss, status=True):
+def gen_bitstream_v2(bss):
     """Generate bitstream from strenght array
+    Version 2, which is much faster
 
     :param bss: array. float stream representing bit strength
     :return bs: bitarray. bitstream
     """
-    with tqdm(total=len(bss), ncols=CLI_WIDTH, unit='bit', unit_scale=True, disable=not status) as pbar:
-        bs = bitarray()
-        for c in bss:
-            pbar.update(1)
-            if c > 0:
-                bs.append(1)
-            else:
-                bs.append(0)
+    bsn = bss >= 0
+    bsp = np.packbits(bsn, axis=None)
+    bs = bitarray()
+    bs.frombytes(bsp.tobytes())
+    
+    return bs
+    
 
-        return bs
-
-def compare_bs(bs1, bs2, perLine=64):
-    """Compare two bitarrays and mark differences
-
-    :param bs1: bitarray. bitsream 1
-    :param bs2: bitarray. bitstream 2
-    :param perLine: integer. number of bits per Line
-    """
-
-    length = min(bs1.length(), bs2.length())
-    for i in range(0, length, perLine):
-        result = '      '
-        for b in range(0,perLine):
-            if i+b < length:
-                if (bs1[i+b] == bs2[i+b]):
-                    result += ' '
-                else:
-                    result += '*'
-        if '*' in result:
-            print("%04d: %s" % (i/perLine, bs1[i:i + perLine].to01()))
-            print(result)
+# Only for debugging
+#def compare_bs(bs1, bs2, perLine=64):
+#    """Compare two bitarrays and mark differences
+#
+#    :param bs1: bitarray. bitsream 1
+#    :param bs2: bitarray. bitstream 2
+#    :param perLine: integer. number of bits per Line
+#    """
+#
+#    length = min(bs1.length(), bs2.length())
+#    for i in range(0, length, perLine):
+#        result = '      '
+#        for b in range(0,perLine):
+#            if i+b < length:
+#                if (bs1[i+b] == bs2[i+b]):
+#                    result += ' '
+#                else:
+#                    result += '*'
+#        if '*' in result:
+#            print("%04d: %s" % (i/perLine, bs1[i:i + perLine].to01()))
+#            print(result)
 
 
 def print_format(bs, perLine=64):
@@ -220,7 +219,7 @@ def main():
 
     # Generate bitstream based on strength
     if verbose > 0: print("[INFO] Generate bitstream")
-    bitStream = gen_bitstream(bitStreamStrength, verbose)
+    bitStream = gen_bitstream_v2(bitStreamStrength)
 
     # Manchester decode bitstream
     if verbose > 0: print("[INFO] Decode bitstream")
