@@ -18,6 +18,9 @@ from gnuradio import digital
 from gnuradio import filter
 from gnuradio import gr
 from gnuradio.filter import firdes
+from tqdm import tqdm
+import time, os
+import threading
 import pmt
 import sys
 
@@ -130,8 +133,28 @@ def main():
 
     if filename is '':
         usage()
+    try:
+        size = os.path.getsize(filename)*8
+    except:
+        print("Error accessing file:", filename)
+        usage()
+
 
     print "Demodulate to %s" % outputFilename
+
+    # Probably not working
+    # Need bigger file for testing and debugging :)
+    def _progress_bar():
+        with tqdm(total=100) as pbar:
+            for i in range(100):
+                time.sleep(size/(100*sampleRate*24))
+                pbar.update(1)
+
+
+    _progress_bar_thread = threading.Thread(target=_progress_bar)
+    _progress_bar_thread.daemon = True
+    _progress_bar_thread.start()
+
     try:
         noaa_demodulate(filename, sampleRate, bsFormat, outputFilename).run()
     except [[KeyboardInterrupt]]:
