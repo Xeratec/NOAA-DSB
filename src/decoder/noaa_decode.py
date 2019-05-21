@@ -31,10 +31,13 @@ def usage():
     print("     -f <file>:  Input file (required)")
     print("     -c <size>:  Number of bytes to analyze (-1 for everything)")
     print("     -i [0,1]:   Specify input format")
-    print("                   0: Real Values (default)")
-    print("                   1: Complex Values")
+    print("                   0: Float32 (default)")
+    print("                   1: Complex64")
     print("     -v <level>: Enable verbose logging. 0-3 (low-high)")
     print("     -o <file>:  Output file (default=NOAA_DSB_MinorFrames.txt)")
+    print("")
+    print("Notes: Output from MM Clock Recovery requieres i=0 (py_decode.py)")
+    print("       Output from Polyphase Clock Sync requires i=1")
     sys.exit()
 
 

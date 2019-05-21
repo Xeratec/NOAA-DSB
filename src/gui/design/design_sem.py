@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'SEM.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.2
+# Created by: PyQt5 UI code generator 5.12.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -15,10 +15,6 @@ class Ui_Form(object):
         Form.resize(400, 358)
         self.gridLayout = QtWidgets.QGridLayout(Form)
         self.gridLayout.setObjectName("gridLayout")
-        self.Compass = QwtCompass(Form)
-        self.Compass.setLineWidth(4)
-        self.Compass.setObjectName("Compass")
-        self.gridLayout.addWidget(self.Compass, 0, 0, 1, 1)
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -26,6 +22,7 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Form"))
+
 
 
 

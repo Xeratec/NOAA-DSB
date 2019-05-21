@@ -29,9 +29,6 @@ def usage():
     print("Usage:")
     print("     -f <file>:         Input file (required)")
     print("     -r sample_rate:    Sample rate (default=56200)")
-    print("     -i [0,1]:          Specify output format")
-    print("                          0: Real Values (default)")
-    print("                          1: Complex Values")
     print("     -o <file>:         Output file (default=demod_imag.raw)")
     sys.exit()
 
@@ -62,50 +59,32 @@ class noaa_demodulate(gr.top_block):
             fractional_bw=None,
         )
         self.low_pass_filter_0 = filter.fir_filter_ccf(1, firdes.low_pass(1, samp_rate, 11000, 6000, firdes.WIN_BLACKMAN, 6.76))
-        self.digital_pfb_clock_sync_xxx_0 = digital.pfb_clock_sync_ccf(sps, .068 / 1.5, (lp_taps), nfilts, 0, 10, 2)
+        self.digital_clock_recovery_mm_xx_0 = digital.clock_recovery_mm_cc(sps*(1+0.0), 0.25*0.175*0.175, 0.5, 0.175, 0.005)
         self.digital_cma_equalizer_cc_0 = digital.cma_equalizer_cc(6, 1, .0000005, 2)
         self.dc_blocker_xx_0_0 = filter.dc_blocker_cc(16, False)
         self.blocks_throttle_0 = blocks.throttle(gr.sizeof_gr_complex * 1, samp_rate * 24, True)
-        self.blocks_null_sink_0_0_0 = blocks.null_sink(gr.sizeof_float * 1)
-        self.blocks_null_sink_0_0 = blocks.null_sink(gr.sizeof_float * 1)
-        self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_float * 1)
 
         self.analog_pll_carriertracking_cc_0 = analog.pll_carriertracking_cc(0.068 / 12, 6000 * 2 * 3.14159 / samp_rate,-6000 * 2 * 3.14159 / samp_rate)
         self.analog_agc2_xx_0 = analog.agc2_cc(0.5, 1, 1.0, 1.0)
         self.analog_agc2_xx_0.set_max_gain(65536)
 
-        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex * 1, '/home/xeratec/Projects/NOAA-DSB/recordings/samples/POES_56k250.raw',
-                                                       False)
+        self.blocks_file_source_0 = blocks.file_source(gr.sizeof_gr_complex * 1, input_filename,False)
         self.blocks_file_source_0.set_begin_tag(pmt.PMT_NIL)
 
-        if bs_format == 0:
-            self.blocks_complex_to_imag_0 = blocks.complex_to_imag(1)
-            self.blocks_file_sink_3_1 = blocks.file_sink(gr.sizeof_float * 1, output_filename, False)
-            self.blocks_file_sink_3_1.set_unbuffered(False)
-        if bs_format == 1:
-            self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_gr_complex * 1, output_filename, False)
-            self.blocks_file_sink_0.set_unbuffered(False)
+        self.blocks_file_sink_0 = blocks.file_sink(gr.sizeof_gr_complex * 1, output_filename, False)
+        self.blocks_file_sink_0.set_unbuffered(False)
 
         #################################################
         # Connections
         ##################################################
         self.connect((self.analog_agc2_xx_0, 0), (self.analog_pll_carriertracking_cc_0, 0))
         self.connect((self.analog_pll_carriertracking_cc_0, 0), (self.dc_blocker_xx_0_0, 0))
-
-        if bs_format == 0:
-            self.connect((self.blocks_complex_to_imag_0, 0), (self.blocks_file_sink_3_1, 0))
-            self.connect((self.digital_cma_equalizer_cc_0, 0), (self.blocks_complex_to_imag_0, 0))
-        if bs_format == 1:
-            self.connect((self.digital_cma_equalizer_cc_0, 0), (self.blocks_file_sink_0, 0))
-
+        self.connect((self.digital_cma_equalizer_cc_0, 0), (self.blocks_file_sink_0, 0))
         self.connect((self.blocks_file_source_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_throttle_0, 0), (self.analog_agc2_xx_0, 0))
         self.connect((self.dc_blocker_xx_0_0, 0), (self.low_pass_filter_0, 0))
-        self.connect((self.digital_pfb_clock_sync_xxx_0, 3), (self.blocks_null_sink_0, 0))
-        self.connect((self.digital_pfb_clock_sync_xxx_0, 1), (self.blocks_null_sink_0_0, 0))
-        self.connect((self.digital_pfb_clock_sync_xxx_0, 2), (self.blocks_null_sink_0_0_0, 0))
-        self.connect((self.digital_pfb_clock_sync_xxx_0, 0), (self.digital_cma_equalizer_cc_0, 0))
-        self.connect((self.low_pass_filter_0, 0), (self.digital_pfb_clock_sync_xxx_0, 0))
+        self.connect((self.digital_clock_recovery_mm_xx_0, 0), (self.digital_cma_equalizer_cc_0, 0))
+        self.connect((self.low_pass_filter_0, 0), (self.digital_clock_recovery_mm_xx_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.blocks_throttle_0, 0))
 
 def main():
@@ -139,6 +118,7 @@ def main():
         print("Error accessing file:", filename)
         usage()
 
+    print "Input file: %s" % filename
 
     print "Demodulate to %s" % outputFilename
 
@@ -147,7 +127,7 @@ def main():
     def _progress_bar():
         with tqdm(total=100) as pbar:
             for i in range(100):
-                time.sleep(size/(100*sampleRate*24))
+                time.sleep(size/(1000.0*sampleRate*24*6.6))
                 pbar.update(1)
 
 

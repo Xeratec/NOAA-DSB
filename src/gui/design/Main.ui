@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>458</width>
-    <height>576</height>
+    <width>981</width>
+    <height>848</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,58 +29,46 @@
      <height>528</height>
     </size>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="spacing">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="twCentral">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="currentIndex">
        <number>0</number>
       </property>
-      <property name="sizeConstraint">
-       <enum>QLayout::SetMaximumSize</enum>
+      <property name="tabsClosable">
+       <bool>false</bool>
       </property>
-      <item>
-       <widget class="QTabWidget" name="twCentral">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <property name="tabsClosable">
-         <bool>false</bool>
-        </property>
-        <property name="tabBarAutoHide">
-         <bool>false</bool>
-        </property>
-        <widget class="QWidget" name="tabProcess">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <attribute name="title">
-          <string>Process</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout_5">
-          <property name="leftMargin">
-           <number>9</number>
+      <property name="tabBarAutoHide">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="tabProcess">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <attribute name="title">
+        <string>Process</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QSplitter" name="processSpliter">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <property name="rightMargin">
-           <number>9</number>
-          </property>
-          <item row="0" column="0">
+          <widget class="QWidget" name="">
            <layout class="QVBoxLayout" name="vlProcess">
-            <property name="sizeConstraint">
-             <enum>QLayout::SetNoConstraint</enum>
-            </property>
             <item>
              <widget class="QGroupBox" name="groupDemod">
               <property name="title">
-               <string>Demodulate</string>
+               <string>Demodulator</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_8">
                <item row="0" column="0">
@@ -120,6 +108,25 @@
                      <height>30</height>
                     </size>
                    </property>
+                   <property name="verticalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::NoWrap</enum>
+                   </property>
+                   <property name="html">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Bitstream Vera Sans'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="placeholderText">
+                    <string>demod.raw</string>
+                   </property>
                   </widget>
                  </item>
                  <item row="1" column="2">
@@ -143,6 +150,25 @@
                      <height>30</height>
                     </size>
                    </property>
+                   <property name="verticalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::NoWrap</enum>
+                   </property>
+                   <property name="html">
+                    <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Bitstream Vera Sans'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   </property>
+                   <property name="placeholderText">
+                    <string>IQ-Record.raw</string>
+                   </property>
                   </widget>
                  </item>
                  <item row="0" column="0">
@@ -161,11 +187,14 @@
                  </item>
                  <item row="2" column="0" colspan="2">
                   <widget class="QProgressBar" name="pbDemod">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="focusPolicy">
                     <enum>Qt::WheelFocus</enum>
                    </property>
                    <property name="value">
-                    <number>10</number>
+                    <number>0</number>
                    </property>
                   </widget>
                  </item>
@@ -177,7 +206,7 @@
             <item>
              <widget class="QGroupBox" name="groupDecode">
               <property name="title">
-               <string>Decode</string>
+               <string>Decoder</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_7">
                <item row="0" column="0">
@@ -217,6 +246,18 @@
                      <height>30</height>
                     </size>
                    </property>
+                   <property name="verticalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::NoWrap</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string>NOAA.txt</string>
+                   </property>
                   </widget>
                  </item>
                  <item row="1" column="2">
@@ -240,6 +281,18 @@
                      <height>30</height>
                     </size>
                    </property>
+                   <property name="verticalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::NoWrap</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string>demod.raw</string>
+                   </property>
                   </widget>
                  </item>
                  <item row="0" column="0">
@@ -258,8 +311,11 @@
                  </item>
                  <item row="2" column="0" colspan="2">
                   <widget class="QProgressBar" name="pbDecode">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="value">
-                    <number>24</number>
+                    <number>0</number>
                    </property>
                   </widget>
                  </item>
@@ -271,45 +327,15 @@
             <item>
              <widget class="QGroupBox" name="groupAnalyze">
               <property name="title">
-               <string>Analyze</string>
+               <string>Analyzer</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_6">
                <item row="0" column="0">
                 <layout class="QGridLayout" name="glAnalyze">
                  <item row="0" column="3">
-                  <widget class="QToolButton" name="tpAnalyzeSettings">
+                  <widget class="QToolButton" name="tbAnalyzeSettings">
                    <property name="text">
                     <string>...</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="2" colspan="2">
-                  <widget class="QPushButton" name="bpAnalyzeStart">
-                   <property name="text">
-                    <string>Analyze</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2">
-                  <widget class="QPushButton" name="pbAnalyzeOpen">
-                   <property name="text">
-                    <string>Open</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QTextEdit" name="textAnalyzeOutput">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>1</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>30</height>
-                    </size>
                    </property>
                   </widget>
                  </item>
@@ -317,22 +343,6 @@
                   <widget class="QPushButton" name="bpAnalyzeSelect">
                    <property name="text">
                     <string>Select</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QTextEdit" name="textAnalyzeInput">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>1</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="maximumSize">
-                    <size>
-                     <width>16777215</width>
-                     <height>30</height>
-                    </size>
                    </property>
                   </widget>
                  </item>
@@ -350,10 +360,83 @@
                    </property>
                   </widget>
                  </item>
+                 <item row="0" column="1">
+                  <widget class="QTextEdit" name="textAnalyzeInput">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>1</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="verticalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::NoWrap</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string>NOAA.txt</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2" colspan="2">
+                  <widget class="QPushButton" name="bpAnalyzeStart">
+                   <property name="text">
+                    <string>Analyze</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QTextEdit" name="textAnalyzeOutput">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>1</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="maximumSize">
+                    <size>
+                     <width>16777215</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                   <property name="verticalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="horizontalScrollBarPolicy">
+                    <enum>Qt::ScrollBarAlwaysOff</enum>
+                   </property>
+                   <property name="lineWrapMode">
+                    <enum>QTextEdit::NoWrap</enum>
+                   </property>
+                   <property name="placeholderText">
+                    <string>Telemetry.txt</string>
+                   </property>
+                  </widget>
+                 </item>
                  <item row="2" column="0" colspan="2">
                   <widget class="QProgressBar" name="pbAnalyze">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="value">
-                    <number>99</number>
+                    <number>0</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QPushButton" name="pbAnalyzeOpen">
+                   <property name="text">
+                    <string>Open</string>
                    </property>
                   </widget>
                  </item>
@@ -363,154 +446,165 @@
              </widget>
             </item>
            </layout>
+          </widget>
+          <widget class="QPlainTextEdit" name="tbProcess">
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="maximumBlockCount">
+            <number>500</number>
+           </property>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tabTelemetry">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <attribute name="title">
+        <string>Telemetry</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_9">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item row="0" column="0">
+         <layout class="QVBoxLayout" name="vlTelemetry" stretch="0">
+          <item>
+           <widget class="QTabWidget" name="twTelemetry">
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="tabFrame">
+             <attribute name="title">
+              <string>Frame</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_11">
+              <item row="0" column="0">
+               <widget class="QGroupBox" name="gropFrameInfo">
+                <property name="title">
+                 <string>Info</string>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_10" rowstretch="0,0,0,0" columnstretch="3,2,3,2">
+                 <item row="0" column="3">
+                  <widget class="QLabel" name="lFrameSpacecraftID">
+                   <property name="text">
+                    <string>NOAA-19 (N')</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="lFrameMajorFrame">
+                   <property name="text">
+                    <string>#Major Frames</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="lFrameMajorFrame_2">
+                   <property name="text">
+                    <string>Major Frame</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="lFrameSpacecraft">
+                   <property name="text">
+                    <string>Spacecraft:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="lFrameMajorFrameNum">
+                   <property name="text">
+                    <string>6331</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0" colspan="4">
+                  <spacer name="vsFrame">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeType">
+                    <enum>QSizePolicy::Fixed</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>10</width>
+                     <height>30</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="lFrameMinorFrame">
+                   <property name="text">
+                    <string>Minor Frame</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="2" colspan="2">
+                  <widget class="QComboBox" name="cbFrameMinorFrame"/>
+                 </item>
+                 <item row="3" column="0" colspan="2">
+                  <widget class="QComboBox" name="cbFrameMajorFrame"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QGroupBox" name="groupFrameDetail">
+                <property name="title">
+                 <string>Detail</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <item>
+                  <widget class="QTableView" name="tvFrameDetail"/>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tabStats">
+             <attribute name="title">
+              <string>Statistics</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_12">
+              <item row="0" column="0">
+               <widget class="QWidget" name="wStats" native="true"/>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tabSEM">
+             <attribute name="title">
+              <string>SEM</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_13">
+              <item row="0" column="0">
+               <widget class="QWidget" name="wSEM" native="true"/>
+              </item>
+             </layout>
+            </widget>
+           </widget>
           </item>
          </layout>
-        </widget>
-        <widget class="QWidget" name="tabTelemetry">
-         <attribute name="title">
-          <string>Telemetry</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout_9">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>5</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item row="0" column="0">
-           <layout class="QVBoxLayout" name="vlTelemetry" stretch="0">
-            <item>
-             <widget class="QTabWidget" name="twTelemetry">
-              <property name="currentIndex">
-               <number>0</number>
-              </property>
-              <widget class="QWidget" name="tabFrame">
-               <attribute name="title">
-                <string>Frame</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_11">
-                <item row="0" column="0">
-                 <widget class="QGroupBox" name="gropFrameInfo">
-                  <property name="title">
-                   <string>Info</string>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_10" rowstretch="0,0,0,0" columnstretch="3,2,3,2">
-                   <item row="0" column="3">
-                    <widget class="QLabel" name="lFrameSpacecraftID">
-                     <property name="text">
-                      <string>NOAA-19 (N')</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="lFrameMajorFrame">
-                     <property name="text">
-                      <string>#Major Frames</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="lFrameMajorFrame_2">
-                     <property name="text">
-                      <string>Major Frame</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="2">
-                    <widget class="QLabel" name="lFrameSpacecraft">
-                     <property name="text">
-                      <string>Spacecraft:</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="0" column="1">
-                    <widget class="QLabel" name="lFrameMajorFrameNum">
-                     <property name="text">
-                      <string>6331</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0" colspan="4">
-                    <spacer name="vsFrame">
-                     <property name="orientation">
-                      <enum>Qt::Vertical</enum>
-                     </property>
-                     <property name="sizeType">
-                      <enum>QSizePolicy::Fixed</enum>
-                     </property>
-                     <property name="sizeHint" stdset="0">
-                      <size>
-                       <width>10</width>
-                       <height>30</height>
-                      </size>
-                     </property>
-                    </spacer>
-                   </item>
-                   <item row="2" column="2">
-                    <widget class="QLabel" name="lFrameMinorFrame">
-                     <property name="text">
-                      <string>Minor Frame</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="2" colspan="2">
-                    <widget class="QComboBox" name="cbFrameMinorFrame"/>
-                   </item>
-                   <item row="3" column="0" colspan="2">
-                    <widget class="QComboBox" name="cbFrameMajorFrame"/>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QGroupBox" name="groupFrameDetail">
-                  <property name="title">
-                   <string>Detail</string>
-                  </property>
-                  <layout class="QVBoxLayout" name="verticalLayout_5">
-                   <item>
-                    <widget class="QTableView" name="tvFrameDetail"/>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="tabStats">
-               <attribute name="title">
-                <string>Statistics</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_12">
-                <item row="0" column="0">
-                 <widget class="QWidget" name="wStats" native="true"/>
-                </item>
-               </layout>
-              </widget>
-              <widget class="QWidget" name="tabSEM">
-               <attribute name="title">
-                <string>SEM</string>
-               </attribute>
-               <layout class="QGridLayout" name="gridLayout_13">
-                <item row="0" column="0">
-                 <widget class="QWidget" name="wSEM" native="true"/>
-                </item>
-               </layout>
-              </widget>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </item>
-     </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -519,7 +613,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>458</width>
+     <width>981</width>
      <height>24</height>
     </rect>
    </property>
@@ -540,6 +634,7 @@
     <property name="title">
      <string>&amp;Settings</string>
     </property>
+    <addaction name="actionConsole_Output"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
@@ -572,7 +667,241 @@
     <string>Licence</string>
    </property>
   </action>
+  <action name="actionConsole_Output">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Console Output</string>
+   </property>
+  </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pbDemodOpen</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pbDemodOpen_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>883</x>
+     <y>124</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>459</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbDecodeOpen</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pbDecodeOpen_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>883</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>587</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbAnalyzeOpen</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pbAnalyzeOpen_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>872</x>
+     <y>471</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>677</x>
+     <y>617</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbDemodSelect</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pbDemodSelect_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>857</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>678</x>
+     <y>202</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbDecodeSelect</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pbDecodeSelect_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>870</x>
+     <y>336</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>669</x>
+     <y>455</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bpAnalyzeSelect</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>pbAnalyzeSelect_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>864</x>
+     <y>505</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>668</x>
+     <y>691</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>336</x>
+     <y>423</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tbDemodSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>tbDemodSettings_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>924</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>674</x>
+     <y>71</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tbDecodeSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>tbDecodeSettings_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>941</x>
+     <y>307</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>675</x>
+     <y>398</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>tbAnalyzeSettings</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>tbAnalyzeSettings_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>941</x>
+     <y>470</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>665</x>
+     <y>645</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbDemodStart</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>run_demod()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>929</x>
+     <y>213</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>976</x>
+     <y>219</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pbDecodeStart</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>run_decode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>898</x>
+     <y>381</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>977</x>
+     <y>385</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>bpAnalyzeStart</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>run_analyze()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>928</x>
+     <y>555</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>980</x>
+     <y>566</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>pbDemodOpen_clicked()</slot>
+  <slot>pbDecodeOpen_clicked()</slot>
+  <slot>pbAnalyzeOpen_clicked()</slot>
+  <slot>pbDemodSelect_clicked()</slot>
+  <slot>pbDecodeSelect_clicked()</slot>
+  <slot>pbAnalyzeSelect_clicked()</slot>
+  <slot>tbDemodSettings_clicked()</slot>
+  <slot>tbDecodeSettings_clicked()</slot>
+  <slot>tbAnalyzeSettings_clicked()</slot>
+  <slot>run_demod()</slot>
+  <slot>run_decode()</slot>
+  <slot>run_analyze()</slot>
+ </slots>
 </ui>
