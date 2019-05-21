@@ -30,6 +30,9 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         ui = design_stats.Ui_Form()
         ui.setupUi(self.wSEM)
 
+    def setupDemod(self):
+        return
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # A new instance of QApplication
