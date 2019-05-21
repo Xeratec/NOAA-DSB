@@ -21,7 +21,7 @@
 bitStream = ''
 
 # !!! use below when reading hex file
-rawStream = open("NOAA_DSB_MinorFrames.txt").read()
+rawStream = open("decoder/NOAA_DSB_MinorFrames.txt").read()
 rawStream = rawStream[:-1].replace(" ", "")
 rawStream = rawStream[:-1].replace("\n", "")
 
@@ -40,9 +40,10 @@ wordStream = [[] for i in range(len(bitStream) // 832 + 1)]     # allocate space
 #*********************************************************#
 #   look for sync word while looping through bit stream   #
 #*********************************************************#
-#syncWord = '111011011110001000001000'      # where last 4 bits are spacecra
-                                           # using '1000' at the moment
+# syncWord = '111011011110001000001000'      # where last 4 bits are spacecra
+                                             # using '1000' at the moment
 syncWord = '111011011110001000001111'
+
 i = 0
 while not bitStream == '':
 
@@ -106,50 +107,47 @@ while not bitStream == '':
 
     #   time code [word pos: 8, 9, 10, 11, 12]   #
     #********************************************#
-    # TODO: find out how this works & if and when it is needed
-    # if needed:
-    #     nextIdx += 40
+    if int(wordStream[i][4][12:]) == 0:
+        wordStream[i].append('day ' + str(int(bitStream[nextIdx: nextIdx + 9], 2)) + ' ' +
+                             'milisec ' + str(int(bitStream[nextIdx + 13: nextIdx + 40], 2)))
+        nextIdx += 40
+
+    else:
+        #   digital "B" subcom-1 [word pos: 8]   #
+        #****************************************#
+        wordStream[i].append('digital "B" 1 ' + bitStream[nextIdx: nextIdx + 8])
+        # TODO: find and understand encoding
+        nextIdx += 8
 
 
-    #   digital "B" subcom-1 [word pos: 8]   #
-    #****************************************#
-    wordStream[i].append('digital "B" 1 ' + bitStream[nextIdx: nextIdx + 8])
-    # TODO: find and understand encoding
-    nextIdx += 8
+        #   analog subcom (32 sec) [word pos: 9]   #
+        #******************************************#
+        wordStream[i].append('analog (32 sec) ' + str(int(bitStream[nextIdx: nextIdx + 8], 2) * 20) + 'mV')
+        nextIdx += 8
 
 
-    #   analog subcom (32 sec) [word pos: 9]   #
-    #******************************************#
-    wordStream[i].append('analog (32 sec) ' + bitStream[nextIdx: nextIdx + 8])
-    # TODO: decode to mV if needed
-    nextIdx += 8
+        #   analog subcom (16 sec) [word pos: 10]   #
+        #*******************************************#
+        wordStream[i].append('analog (16 sec) ' + str(int(bitStream[nextIdx: nextIdx + 8], 2) * 20) + 'mV')
+        nextIdx += 8
 
 
-    #   analog subcom (16 sec) [word pos: 10]   #
-    #*******************************************#
-    wordStream[i].append('analog (16 sec) ' + bitStream[nextIdx: nextIdx + 8])
-    # TODO: decode to mV if needed
-    nextIdx += 8
+        #   analog subcom (1 sec) [word pos: 11]   #
+        #******************************************#
+        wordStream[i].append('analog (1 sec) ' + str(int(bitStream[nextIdx: nextIdx + 8], 2) * 20) + 'mV')
+        nextIdx += 8
 
 
-    #   analog subcom (1 sec) [word pos: 11]   #
-    #******************************************#
-    wordStream[i].append('analog (1 sec) ' + bitStream[nextIdx: nextIdx + 8])
-    # TODO: decode to mV if needed
-    nextIdx += 8
-
-
-    #   digital "B" subcom-2 [word pos: 12]   #
-    #*****************************************#
-    wordStream[i].append('digital "B" 2 ' + bitStream[nextIdx: nextIdx + 8])
-    # TODO: find and understand encoding
-    nextIdx += 8
+        #   digital "B" subcom-2 [word pos: 12]   #
+        #*****************************************#
+        wordStream[i].append('digital "B" 2 ' + bitStream[nextIdx: nextIdx + 8])
+        # TODO: find and understand encoding
+        nextIdx += 8
 
 
     #   analog subcom 2 (16 sec) [word pos: 13]   #
     #*********************************************#
-    wordStream[i].append('analog 2 (16 sec) ' + bitStream[nextIdx: nextIdx + 8])
-    # TODO: find and understand encoding
+    wordStream[i].append('analog 2 (16 sec) ' + str(int(bitStream[nextIdx: nextIdx + 8], 2) * 20) + 'mV')
     nextIdx += 8
 
 
@@ -300,5 +298,5 @@ while not bitStream == '':
     i += 1
 
 
-for i in range(1, 10):
-    print(wordStream[-i])
+for i in range(100):
+    print(wordStream[i])
