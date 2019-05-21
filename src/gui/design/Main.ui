@@ -173,6 +173,12 @@ p, li { white-space: pre-wrap; }
                  </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="lDemodInput">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
                    <property name="text">
                     <string>Input File</string>
                    </property>
@@ -641,14 +647,6 @@ p, li { white-space: pre-wrap; }
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionOpen">
-   <property name="text">
-    <string>&amp;Open</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
   <action name="actionExit">
    <property name="text">
     <string>&amp;Exit</string>
@@ -721,7 +719,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>872</x>
-     <y>471</y>
+     <y>458</y>
     </hint>
     <hint type="destinationlabel">
      <x>677</x>
@@ -817,7 +815,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>941</x>
-     <y>307</y>
+     <y>300</y>
     </hint>
     <hint type="destinationlabel">
      <x>675</x>
@@ -881,11 +879,27 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>928</x>
-     <y>555</y>
+     <y>540</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
      <y>566</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionConsole_Output</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>tbProcess</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>490</x>
+     <y>686</y>
     </hint>
    </hints>
   </connection>

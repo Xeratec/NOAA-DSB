@@ -24,7 +24,9 @@ from gui.design import design_stats
 from gui.design import design_sem
 from gui.design.settings import design_settings_analyze, design_settings_demod, design_settings_decode
 
+##### DEBUG ONLY ######
 DEBUG = True
+#######################
 
 class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
 
@@ -39,10 +41,6 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
 
 
     def __init__(self):
-        # Explaining super is out of the scope of this article
-        # So please google it if you're not familar with it
-        # Simple reason why we use it here is that it allows us to
-        # access variables, methods etc in the design.py file
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
@@ -55,11 +53,12 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         # create a process output reader
         self.reader = ProcessOutputReader()
         self.reader.produce_output.connect(self.append_output)
+        self.reader.produce_finished.connect(self.cmd_finished)
 
         self.create_status_bar()
 
         if DEBUG:
-            self.textDemodInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/recordings/raw/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12.raw")
+            self.textDemodInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/recordings/samples/POES_56k250.raw")
             self.textDemodOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/demod.raw")
             self.textDecodeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/demod.raw")
             self.textDecodeOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/NOAA.txt")
@@ -69,7 +68,6 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     #
     def create_status_bar(self):
         self.status_text = QtWidgets.QLabel("Ready")
-
         self.statusBar().addWidget(self.status_text, 1)
 
     #
@@ -81,7 +79,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         file = '' if self.textDemodInput.toPlainText() == '' else os.path.dirname(self.textDemodInput.toPlainText())
         path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select I/Q Recording', file, file_choices)
         if path:
-            self.status_text.setText("Opened %s" % str(path))
+            self.setStatusBarText("Opened ",str(path))
             self.textDemodInput.setText(path)
 
     @pyqtSlot()
@@ -91,7 +89,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
                             "Demod.raw") if self.textDemodOutput.toPlainText() == '' else self.textDemodOutput.toPlainText()
         path,_ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Demod File', file, file_choices)
         if path:
-            self.status_text.setText("Selected %s" % str(path))
+            self.setStatusBarText("Selected ", str(path))
             self.textDemodOutput.setText(path)
 
     @pyqtSlot()
@@ -100,7 +98,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         file = '' if self.textDecodeInput.toPlainText() == '' else os.path.dirname(self.textDecodeInput.toPlainText())
         path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select Demod File', file, file_choices)
         if path:
-            self.status_text.setText("Opened %s" % str(path))
+            self.setStatusBarText("Opened ", str(path))
             self.textDecodeInput.setText(path)
 
     @pyqtSlot()
@@ -109,7 +107,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         file = os.path.join(os.path.curdir, "MinorFrames.txt") if self.textDecodeOutput.toPlainText() == '' else self.textDecodeOutput.toPlainText()
         path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Frame File', file, file_choices)
         if path:
-            self.status_text.setText("Selected %s" % str(path))
+            self.setStatusBarText("Selected ", str(path))
             self.textDecodeOutput.setText(path)
 
     @pyqtSlot()
@@ -118,7 +116,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         file = '' if self.textAnalyzeInput.toPlainText() == '' else os.path.dirname(self.textAnalyzeInput.toPlainText())
         path, _ = QtWidgets.QFileDialog.getOpenFileName(self, 'Select Frame File', file, file_choices)
         if path:
-            self.status_text.setText("Opend %s" % str(path))
+            self.setStatusBarText("Opend ", str(path))
             self.textAnalyzeInput.setText(path)
 
     @pyqtSlot()
@@ -128,7 +126,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
                             "Telemetry.txt") if self.textAnalyzeOutput.toPlainText() == '' else self.textAnalyzeOutput.toPlainText()
         path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save Text File',file, file_choices)
         if path:
-            self.status_text.setText("Selected %s" % str(path))
+            self.setStatusBarText("Selected ", str(path))
             self.textAnalyzeOutput.setText(path)
 
     #
@@ -184,18 +182,15 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     @pyqtSlot()
     def run_demod(self):
         script = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'demodulator/noaa_demodulate.py')
-        print(script)
         cmd = ['-u', script, '-r', str(self.demod_baud_rate), '-f', self.textDemodInput.toPlainText(), '-o', self.textDemodOutput.toPlainText()]
-        print(cmd)
+
         self.reader.start('python2.7', cmd)
 
     @pyqtSlot()
     def run_decode(self):
-        cmd = ['-u', 'decoder/noaa_decode.py', '-v', str(self.decode_log_level), '-i',str(self.decode_input_format),'-f', self.textDecodeInput.toPlainText(), '-o', self.textDecodeOutput.toPlainText()]
-        print(cmd)
+        script = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'decoder/noaa_decode.py')
+        cmd = ['-u', script, '-v', str(self.decode_log_level), '-i',str(self.decode_input_format),'-f', self.textDecodeInput.toPlainText(), '-o', self.textDecodeOutput.toPlainText()]
         self.reader.start('python3', cmd)
-
-        return
 
     @pyqtSlot()
     def run_analyze(self):
@@ -204,20 +199,38 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     #
     # Utility
     #
+    def setStatusBarText(self, msg, text=None):
+        if text==None:
+            self.status_text.setText(msg)
+            return
+
+        if len(text) + len(msg) > 64:
+            self.status_text.setText(msg +".. " + text[-(64-len(msg)):])
+        else:
+            self.status_text.setText(msg + text)
+
+    def cmd_finished(self, exitCode):
+        if exitCode == 0:
+            self.setStatusBarText("Done")
+        else:
+            self.setStatusBarText("Error")
+
     @pyqtSlot(str)
     def append_output(self, text):
         self.tbProcess.textCursor().insertText(text)
+
+        self.setStatusBarText(text.split('\n')[-1])
         self.scroll_to_last_line()
 
     def scroll_to_last_line(self):
         cursor = self.tbProcess.textCursor()
         cursor.movePosition(QTextCursor.End)
-      # cursor.movePosition(QTextCursor.Up if cursor.atBlockStart() else QTextCursor.StartOfLine)
         self.tbProcess.setTextCursor(cursor)
 
 
 class ProcessOutputReader(QProcess):
     produce_output = pyqtSignal(str)
+    produce_finished = pyqtSignal(int)
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -228,12 +241,9 @@ class ProcessOutputReader(QProcess):
         # prepare decoding process' output to Unicode
         codec = QTextCodec.codecForLocale()
         self._decoder_stdout = codec.makeDecoder()
-        # only necessary when stderr channel isn't merged into stdout:
-        # self._decoder_stderr = codec.makeDecoder()
 
         self.readyReadStandardOutput.connect(self._ready_read_standard_output)
-        # only necessary when stderr channel isn't merged into stdout:
-        # self.readyReadStandardError.connect(self._ready_read_standard_error)
+        self.finished.connect(self.onFinished)
 
     @pyqtSlot()
     def _ready_read_standard_output(self):
@@ -241,12 +251,8 @@ class ProcessOutputReader(QProcess):
         text = self._decoder_stdout.toUnicode(raw_bytes)
         self.produce_output.emit(text)
 
-    # only necessary when stderr channel isn't merged into stdout:
-    # @pyqtSlot()
-    # def _ready_read_standard_error(self):
-    #     raw_bytes = self.readAllStandardError()
-    #     text = self._decoder_stderr.toUnicode(raw_bytes)
-    #     self.produce_output.emit(text)
+    def onFinished(self, exitCode):
+        self.produce_finished.emit(exitCode)
 
 
 def main():
