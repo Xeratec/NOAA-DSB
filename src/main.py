@@ -21,8 +21,9 @@
 bitStream = ''
 
 # !!! use below when reading hex file
-rawStream = open("test/TestMinorFrame.txt").read()
+rawStream = open("NOAA_DSB_MinorFrames.txt").read()
 rawStream = rawStream[:-1].replace(" ", "")
+rawStream = rawStream[:-1].replace("\n", "")
 
 for elem in rawStream:
     bitStream += bin(int(elem, 16))[2:].zfill(4)
@@ -33,14 +34,15 @@ for elem in rawStream:
 # for string in rawStream:
 #     bitStream += str(ord(string))
 
-wordStream = [[] for i in range(len(bitStream) / 832 + 1)]     # allocate space for minor frames
+wordStream = [[] for i in range(len(bitStream) // 832 + 1)]     # allocate space for minor frames
 
 
 #*********************************************************#
 #   look for sync word while looping through bit stream   #
 #*********************************************************#
-syncWord = '111011011110001000001000'      # where last 4 bits are spacecra
+#syncWord = '111011011110001000001000'      # where last 4 bits are spacecra
                                            # using '1000' at the moment
+syncWord = '111011011110001000001111'
 i = 0
 while not bitStream == '':
 
@@ -298,4 +300,5 @@ while not bitStream == '':
     i += 1
 
 
-print(wordStream[-1])
+for i in range(1, 10):
+    print(wordStream[-i])

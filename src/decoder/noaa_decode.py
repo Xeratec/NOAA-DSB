@@ -56,7 +56,7 @@ def manchester_decode_nebarnix(bss, bs, status=True):
     errx = []
 
     with tqdm(total=len(bss), ncols=CLI_WIDTH, unit='bit', unit_scale=True, disable=not status) as pbar:
-        for idx in range(1,bs.length()-3):
+        for idx in range(1,bs.length()-8):
             # If not a bit boundary, see if it should be and we're out of sync
             # But only resync on strong bits
             if ((idx % 2) == clockmod):

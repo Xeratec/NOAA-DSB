@@ -4,11 +4,12 @@ clear all;
 %clf;
 %hfile = 'POES_56k250.raw';
 %hfile = 'pll_nocarrier_polyphased_equalized_loproto2.raw';
-hfile = '../test/6_bits_dcblock2.raw'; 
+hfile = '../test/demod.raw'; 
 fid = fopen(hfile,'rb');
 y = fread(fid,'float32');
 
-y = (y(1:2:end) + 1i*y(2:2:end))';
+%y = (y(1:2:end) + 1i*y(2:2:end))';
+y = 1i*y;
 %y = y(2:2:end) + 1i*y(1:2:end);
 Nfft = 1500000;
 %GNUradio should generate 1 sample per symbol with a period of
