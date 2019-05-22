@@ -647,8 +647,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDemodOpen_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>883</x>
-     <y>124</y>
+     <x>692</x>
+     <y>140</y>
     </hint>
     <hint type="destinationlabel">
      <x>459</x>
@@ -663,8 +663,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDecodeOpen_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>883</x>
-     <y>295</y>
+     <x>692</x>
+     <y>312</y>
     </hint>
     <hint type="destinationlabel">
      <x>587</x>
@@ -679,8 +679,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbAnalyzeOpen_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>872</x>
-     <y>458</y>
+     <x>692</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
      <x>677</x>
@@ -695,8 +695,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDemodSelect_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>857</x>
-     <y>170</y>
+     <x>692</x>
+     <y>180</y>
     </hint>
     <hint type="destinationlabel">
      <x>678</x>
@@ -711,8 +711,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDecodeSelect_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>870</x>
-     <y>336</y>
+     <x>692</x>
+     <y>352</y>
     </hint>
     <hint type="destinationlabel">
      <x>669</x>
@@ -727,8 +727,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbAnalyzeSelect_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>864</x>
-     <y>505</y>
+     <x>692</x>
+     <y>523</y>
     </hint>
     <hint type="destinationlabel">
      <x>668</x>
@@ -759,8 +759,8 @@ p, li { white-space: pre-wrap; }
    <slot>tbDemodSettings_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>924</x>
-     <y>127</y>
+     <x>731</x>
+     <y>140</y>
     </hint>
     <hint type="destinationlabel">
      <x>674</x>
@@ -775,8 +775,8 @@ p, li { white-space: pre-wrap; }
    <slot>tbDecodeSettings_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>941</x>
-     <y>300</y>
+     <x>731</x>
+     <y>312</y>
     </hint>
     <hint type="destinationlabel">
      <x>675</x>
@@ -791,8 +791,8 @@ p, li { white-space: pre-wrap; }
    <slot>tbAnalyzeSettings_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>941</x>
-     <y>470</y>
+     <x>731</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
      <x>665</x>
@@ -807,8 +807,8 @@ p, li { white-space: pre-wrap; }
    <slot>run_demod()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>929</x>
-     <y>213</y>
+     <x>731</x>
+     <y>219</y>
     </hint>
     <hint type="destinationlabel">
      <x>976</x>
@@ -823,8 +823,8 @@ p, li { white-space: pre-wrap; }
    <slot>run_decode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>898</x>
-     <y>381</y>
+     <x>731</x>
+     <y>391</y>
     </hint>
     <hint type="destinationlabel">
      <x>977</x>
@@ -839,8 +839,8 @@ p, li { white-space: pre-wrap; }
    <slot>run_analyze()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>928</x>
-     <y>540</y>
+     <x>731</x>
+     <y>562</y>
     </hint>
     <hint type="destinationlabel">
      <x>980</x>
@@ -864,6 +864,38 @@ p, li { white-space: pre-wrap; }
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionAbout</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onAbout()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>423</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLicence</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onLicense()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>382</x>
+     <y>423</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>pbDemodOpen_clicked()</slot>
@@ -878,5 +910,7 @@ p, li { white-space: pre-wrap; }
   <slot>run_demod()</slot>
   <slot>run_decode()</slot>
   <slot>run_analyze()</slot>
+  <slot>onAbout()</slot>
+  <slot>onLicense()</slot>
  </slots>
 </ui>

@@ -28,7 +28,7 @@ from gui.settings import design_settings_analyze, design_settings_demod, design_
 DEBUG = True
 #######################
 
-class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
+class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
 
     #
     # Settings Variables
@@ -197,6 +197,25 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     def run_analyze(self):
         return
 
+
+    #
+    # Menu entry
+    #
+    def onAbout(self):
+        file = open('gui/about.txt', 'r')
+        text = file.read()
+
+        file.close()
+        QtWidgets.QMessageBox.about(self, "About noaa_dsb", text.strip())
+
+
+
+    def onLicense(self):
+        file = open('gui/license.txt', 'r')
+        text = file.read()
+
+        file.close()
+        msg = QtWidgets.QMessageBox().about(self, "License", text.strip())
     #
     # Utility
     #
@@ -258,7 +277,7 @@ class ProcessOutputReader(QProcess):
 
 def main():
     app = QtWidgets.QApplication(sys.argv)  # A new instance of QApplication
-    form = ExampleApp()                 # We set the form to be our ExampleApp (design)
+    form = NOAA_DSB()                  # We set the form to be our ExampleApp (design)
     form.show()                         # Show the form
     app.exec_()                         # and execute the app
 

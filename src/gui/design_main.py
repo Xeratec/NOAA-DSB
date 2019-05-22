@@ -330,6 +330,8 @@ class Ui_MainWindow(object):
         self.pbDecodeStart.clicked.connect(MainWindow.run_decode)
         self.bpAnalyzeStart.clicked.connect(MainWindow.run_analyze)
         self.actionConsole_Output.toggled['bool'].connect(self.tbProcess.setVisible)
+        self.actionAbout.triggered.connect(MainWindow.onAbout)
+        self.actionLicence.triggered.connect(MainWindow.onLicense)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

@@ -1,0 +1,29 @@
+######################################################
+################## NOAA DSB Decoder ##################
+######################################################
+
+Version 0.1 - 22. Mars 2019
+
+### Used Libraries ###
+* Python 3
+* Python 2.7
+* SciPy
+* PyQt5
+* GnuRadio
+
+### Team ###
+Philip Wiese (ETHZ Bsc ETIT)
+Antenna Design, Python, GnuRadio
+[Xeratec](https://github.com/Xeratec)
+
+Julian Merkhover (ETHZ Bsc ETIT)
+Python
+[julianmer](https://github.com/julianmer)
+
+Sevrin Mathys (ETHZ Bsc ETIT)
+GnuRadio, Python
+[SevyRide](https://github.com/SevyRide)
+
+### Contact ###
+Philip Wiese
+philip.wiese@maketec.ch
