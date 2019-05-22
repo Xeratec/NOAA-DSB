@@ -29,11 +29,15 @@ def usage():
     """Prints help message."""
     print("Usage:")
     print("     -f <file>:  Input file (required)")
-    print("     -c <size>:  Number of bytes to analyze (-1 for everything)")
+    print("     -c <size>:  Number of bytes to analyze (-1 for everything, default)")
     print("     -i [0,1]:   Specify input format")
     print("                   0: Float32 (default)")
     print("                   1: Complex64")
-    print("     -v <level>: Enable verbose logging. 0-3 (low-high)")
+    print("     -v <level>: Set logging level")
+    print("                   0: No output")
+    print("                   1: Info (default)")
+    print("                   2: Debug")
+    print("                   3: All")
     print("     -o <file>:  Output file (default=NOAA_DSB_MinorFrames.txt)")
     print("")
     print("Notes: Output from MM Clock Recovery requieres i=0 (py_decode.py)")
@@ -175,8 +179,8 @@ def main():
     filename = ''  # input file
     outputFilename = 'NOAA_DSB_MinorFrames.txt'
     num = -1
-    verbose = 0;
-    bsFormat = 0;
+    verbose = 1
+    bsFormat = 0
 
     SyncWordInverse = bitarray(SyncWord)
     SyncWordInverse.invert()
@@ -211,21 +215,25 @@ def main():
         else:
             bitStreamStrength = rawInput
     except:
-        print("Error accessing file:", filename)
+        print("[ERROR] Error accessing file:", filename)
         usage()
 
     RawTime = np.linspace(0, dt * len(bitStreamStrength), len(bitStreamStrength))
 
     if verbose > 0:
-        print('[INFO] Size: %d' % len(bitStreamStrength))
-        print('[INFO] Duration: %0.2fs' % RawTime[-1])
+        print("Processing file:", filename)
+
+    if verbose > 1:
+        print('Size: %d bits' % len(bitStreamStrength))
+    if verbose > 0:
+        print('Duration: %0.2fs' % RawTime[-1])
 
     # Generate bitstream based on strength
-    if verbose > 0: print("[INFO] Generate bitstream")
+    if verbose > 0: print("Generate bitstream...")
     bitStream = gen_bitstream_v2(bitStreamStrength)
 
     # Manchester decode bitstream
-    if verbose > 0: print("[INFO] Decode bitstream")
+    if verbose > 0: print("Decode bitstream...")
     bitStreamDecoded = manchester_decode_nebarnix(bitStreamStrength, bitStream, verbose)
 
     # For dev purpose
@@ -242,21 +250,21 @@ def main():
     # print()
 
     if verbose > 2:
-        print("[DEBUG] Raw bitstream:")
+        print("Raw bitstream:")
         print_format(bitStream, CLI_WIDTH)
 
         print()
-        print("[DEBUG] Decoded bitstream:")
+        print("Decoded bitstream:")
         print_format(bitStreamDecoded, CLI_WIDTH)
 
     # Search for SyncWord
     idxSyncWord = bitStreamDecoded.search(SyncWord)
     idxSyncWordInv = bitStreamDecoded.search(SyncWordInverse)
 
-    if verbose > 0:
-        print("[INFO] Found: %d normal and %d inverted syncword" % (len(idxSyncWord), len(idxSyncWordInv)))
+    if verbose > 1:
+        print("Found: %d normal and %d inverted syncword" % (len(idxSyncWord), len(idxSyncWordInv)))
         matchLength = np.sum(np.mod(np.diff(idxSyncWord), 832) == 0) + np.sum(np.mod(np.diff(idxSyncWordInv), 832) == 0)
-        print("[INFO] Match length: %d" % matchLength)
+        print("Match length: %d" % matchLength)
 
 
     # Extract minor frames at matched syncword locations and invert if necessary
@@ -288,36 +296,37 @@ def main():
     if verbose > 2:
         for idx in range(0,len(minorFrames)):
             print()
-            print("[INFO] Frame ", idx+1)
+            print("Frame", idx+1)
             print_format(minorFrames[idx], CLI_WIDTH)
-            print("Spacecaft ID: ", spacecrafts[idx])
+            print("Spacecaft ID:", spacecrafts[idx])
         print()
 
     # Most sendt spacecraft id
     spacecraft = stats.mode(spacecrafts)[0][0]
-
-    if spacecraft == 8:
-        print("[INFO] Detected Satellite: %d => NOAA-15" % spacecraft)
-    elif spacecraft == 13:
-        print("[INFO] Detected Satellite: %d => NOAA-18" % spacecraft)
-    elif spacecraft == 15:
-        print("[INFO] Detected Satellite: %d => NOAA-19" % spacecraft)
-    else:
-        print("[INFO] Detected Satellite: %d => UFO!!" % spacecraft)
+    if verbose > 0:
+        if spacecraft == 8:
+            print("Detected Satellite: %d => NOAA-15" % spacecraft)
+        elif spacecraft == 13:
+            print("Detected Satellite: %d => NOAA-18" % spacecraft)
+        elif spacecraft == 15:
+            print("Detected Satellite: %d => NOAA-19" % spacecraft)
+        else:
+            print("Detected Satellite: %d => UFO!!" % spacecraft)
 
     # Parity checks
     tmpMinorFrames= []
     for idx in range(0, len(minorFrames)):
         if not party_check(minorFrames[idx]):
             if verbose > 1:
-                print()
-                print("[WARN] Error in frame %d" % idx)
-                print_format(minorFrames[idx], CLI_WIDTH)
+                print("Parityerror in frame %d" % idx)
+                if verbose > 2:
+                    print_format(minorFrames[idx], CLI_WIDTH)
+                    print()
         else:
             tmpMinorFrames.append(minorFrames[idx])
     minorFrames = tmpMinorFrames.copy()
-
-    print("[INFO] Error free frames: ", len(minorFrames))
+    if verbose > 0:
+       print("Error free frames:", len(minorFrames))
 
     # Save output to file
     try:
@@ -327,7 +336,7 @@ def main():
         usage()
 
     if verbose > 0:
-        print("[INFO] Saving data to ", outputFilename)
+        print("Saving output to:", outputFilename)
 
     with tqdm(total=len(minorFrames), ncols=CLI_WIDTH, unit='bit', unit_scale=True, disable=not verbose) as pbar:
         for idx in range(0, len(minorFrames)):
@@ -336,8 +345,8 @@ def main():
             pbar.update(1)
 
     outputFiledescriptor.close()
-
-    print("Done.")
+    if verbose > 0:
+        print("Done.")
 
 
 if __name__ == "__main__":

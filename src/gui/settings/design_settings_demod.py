@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Settings_Demod.ui'
+# Form implementation generated from reading ui file 'qtDesigner/settings/Settings_Demod.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.1
 #
@@ -46,7 +46,7 @@ class Ui_DialogDemodSettings(object):
 
         self.retranslateUi(DialogDemodSettings)
         self.cbBaudRate.setCurrentIndex(1)
-        self.cbLogLevel.setCurrentIndex(1)
+        self.cbLogLevel.setCurrentIndex(0)
         self.buttonBox.accepted.connect(DialogDemodSettings.accept)
         self.buttonBox.rejected.connect(DialogDemodSettings.reject)
         QtCore.QMetaObject.connectSlotsByName(DialogDemodSettings)
@@ -59,7 +59,7 @@ class Ui_DialogDemodSettings(object):
         self.cbBaudRate.setItemText(1, _translate("DialogDemodSettings", "562500"))
         self.lLogLevel.setText(_translate("DialogDemodSettings", "Log Level"))
         self.cbLogLevel.setItemText(0, _translate("DialogDemodSettings", "Quiet", "0"))
-        self.cbLogLevel.setItemText(1, _translate("DialogDemodSettings", "Verbose", "1"))
+        self.cbLogLevel.setItemText(1, _translate("DialogDemodSettings", "Normal", "1"))
         self.cbLogLevel.setItemText(2, _translate("DialogDemodSettings", "Debug", "2"))
         self.cbLogLevel.setItemText(3, _translate("DialogDemodSettings", "All", "3"))
 

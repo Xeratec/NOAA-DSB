@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'settings/Settings_Analyze.ui'
+# Form implementation generated from reading ui file 'qtDesigner/settings/Settings_Analyze.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.1
 #
@@ -35,7 +35,7 @@ class Ui_DialogAnalyzeSettings(object):
         self.gridLayout.addLayout(self.formLayout_3, 0, 1, 1, 1)
 
         self.retranslateUi(DialogAnalyzeSettings)
-        self.cbLogLevel.setCurrentIndex(1)
+        self.cbLogLevel.setCurrentIndex(0)
         self.buttonBox.accepted.connect(DialogAnalyzeSettings.accept)
         self.buttonBox.rejected.connect(DialogAnalyzeSettings.reject)
         QtCore.QMetaObject.connectSlotsByName(DialogAnalyzeSettings)
@@ -45,7 +45,7 @@ class Ui_DialogAnalyzeSettings(object):
         DialogAnalyzeSettings.setWindowTitle(_translate("DialogAnalyzeSettings", "Settings Analyzer"))
         self.lLogLevel.setText(_translate("DialogAnalyzeSettings", "Log Level"))
         self.cbLogLevel.setItemText(0, _translate("DialogAnalyzeSettings", "Quiet", "0"))
-        self.cbLogLevel.setItemText(1, _translate("DialogAnalyzeSettings", "Verbose", "1"))
+        self.cbLogLevel.setItemText(1, _translate("DialogAnalyzeSettings", "Normal", "1"))
         self.cbLogLevel.setItemText(2, _translate("DialogAnalyzeSettings", "Debug", "2"))
         self.cbLogLevel.setItemText(3, _translate("DialogAnalyzeSettings", "All", "3"))
 

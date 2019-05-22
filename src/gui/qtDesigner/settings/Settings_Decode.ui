@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DialogAnalyzeSettings</class>
- <widget class="QDialog" name="DialogAnalyzeSettings">
+ <class>DialogDecodeSettings</class>
+ <widget class="QDialog" name="DialogDecodeSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Settings Analyzer</string>
+   <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="2">
@@ -26,17 +26,17 @@
    </item>
    <item row="0" column="1">
     <layout class="QFormLayout" name="formLayout_3">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="lLogLevel">
        <property name="text">
         <string>Log Level</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="1" column="1">
       <widget class="QComboBox" name="cbLogLevel">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <item>
         <property name="text">
@@ -45,7 +45,7 @@
        </item>
        <item>
         <property name="text">
-         <string comment="1">Verbose</string>
+         <string comment="1">Normal</string>
         </property>
        </item>
        <item>
@@ -60,6 +60,27 @@
        </item>
       </widget>
      </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="lInputFormat">
+       <property name="text">
+        <string>Input Format</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="cbInputFormat">
+       <item>
+        <property name="text">
+         <string>Float32</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Complex64</string>
+        </property>
+       </item>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
@@ -69,7 +90,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>DialogAnalyzeSettings</receiver>
+   <receiver>DialogDecodeSettings</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -85,7 +106,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>DialogAnalyzeSettings</receiver>
+   <receiver>DialogDecodeSettings</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

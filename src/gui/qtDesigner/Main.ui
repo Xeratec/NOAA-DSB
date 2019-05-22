@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>981</width>
+    <width>766</width>
     <height>848</height>
    </rect>
   </property>
@@ -63,7 +63,7 @@
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <layout class="QVBoxLayout" name="vlProcess">
             <item>
              <widget class="QGroupBox" name="groupDemod">
@@ -173,12 +173,6 @@ p, li { white-space: pre-wrap; }
                  </item>
                  <item row="0" column="0">
                   <widget class="QLabel" name="lDemodInput">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
                    <property name="text">
                     <string>Input File</string>
                    </property>
@@ -188,19 +182,6 @@ p, li { white-space: pre-wrap; }
                   <widget class="QLabel" name="lDemodOuput">
                    <property name="text">
                     <string>Output File</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0" colspan="2">
-                  <widget class="QProgressBar" name="pbDemod">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="focusPolicy">
-                    <enum>Qt::WheelFocus</enum>
-                   </property>
-                   <property name="value">
-                    <number>0</number>
                    </property>
                   </widget>
                  </item>
@@ -315,16 +296,6 @@ p, li { white-space: pre-wrap; }
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="0" colspan="2">
-                  <widget class="QProgressBar" name="pbDecode">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="value">
-                    <number>0</number>
-                   </property>
-                  </widget>
-                 </item>
                 </layout>
                </item>
               </layout>
@@ -426,16 +397,6 @@ p, li { white-space: pre-wrap; }
                    </property>
                    <property name="placeholderText">
                     <string>Telemetry.txt</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0" colspan="2">
-                  <widget class="QProgressBar" name="pbAnalyze">
-                   <property name="enabled">
-                    <bool>false</bool>
-                   </property>
-                   <property name="value">
-                    <number>0</number>
                    </property>
                   </widget>
                  </item>
@@ -619,7 +580,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>981</width>
+     <width>766</width>
      <height>24</height>
     </rect>
    </property>

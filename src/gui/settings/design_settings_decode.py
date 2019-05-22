@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'settings/Settings_Decode.ui'
+# Form implementation generated from reading ui file 'qtDesigner/settings/Settings_Decode.ui'
 #
 # Created by: PyQt5 UI code generator 5.12.1
 #
@@ -43,7 +43,7 @@ class Ui_DialogDecodeSettings(object):
         self.gridLayout.addLayout(self.formLayout_3, 0, 1, 1, 1)
 
         self.retranslateUi(DialogDecodeSettings)
-        self.cbLogLevel.setCurrentIndex(1)
+        self.cbLogLevel.setCurrentIndex(0)
         self.buttonBox.accepted.connect(DialogDecodeSettings.accept)
         self.buttonBox.rejected.connect(DialogDecodeSettings.reject)
         QtCore.QMetaObject.connectSlotsByName(DialogDecodeSettings)
@@ -53,7 +53,7 @@ class Ui_DialogDecodeSettings(object):
         DialogDecodeSettings.setWindowTitle(_translate("DialogDecodeSettings", "Dialog"))
         self.lLogLevel.setText(_translate("DialogDecodeSettings", "Log Level"))
         self.cbLogLevel.setItemText(0, _translate("DialogDecodeSettings", "Quiet", "0"))
-        self.cbLogLevel.setItemText(1, _translate("DialogDecodeSettings", "Verbose", "1"))
+        self.cbLogLevel.setItemText(1, _translate("DialogDecodeSettings", "Normal", "1"))
         self.cbLogLevel.setItemText(2, _translate("DialogDecodeSettings", "Debug", "2"))
         self.cbLogLevel.setItemText(3, _translate("DialogDecodeSettings", "All", "3"))
         self.lInputFormat.setText(_translate("DialogDecodeSettings", "Input Format"))

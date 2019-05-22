@@ -39,7 +39,7 @@
         <bool>true</bool>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="insertPolicy">
         <enum>QComboBox::InsertAlphabetically</enum>
@@ -51,7 +51,7 @@
        </item>
        <item>
         <property name="text">
-         <string>56250</string>
+         <string>562500</string>
         </property>
        </item>
       </widget>
@@ -66,7 +66,7 @@
      <item row="1" column="1">
       <widget class="QComboBox" name="cbLogLevel">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <item>
         <property name="text">
@@ -75,7 +75,7 @@
        </item>
        <item>
         <property name="text">
-         <string comment="1">Verbose</string>
+         <string comment="1">Normal</string>
         </property>
        </item>
        <item>

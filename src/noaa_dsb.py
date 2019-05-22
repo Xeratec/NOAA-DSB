@@ -19,10 +19,10 @@ from PyQt5.QtGui import QTextCursor
 import sys
 import os
 
-from gui.design import design_main
-from gui.design import design_stats
-from gui.design import design_sem
-from gui.design.settings import design_settings_analyze, design_settings_demod, design_settings_decode
+from gui import design_main
+from gui import design_stats
+from gui import design_sem
+from gui.settings import design_settings_analyze, design_settings_demod, design_settings_decode
 
 ##### DEBUG ONLY ######
 DEBUG = True
@@ -146,6 +146,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         if DialogDemodSettings.exec_():
             self.demod_baud_rate = int(ui.cbBaudRate.currentText())
             self.demod_log_level = ui.cbLogLevel.currentIndex()
+            print(self.demod_log_level)
 
 
     @pyqtSlot()
@@ -182,7 +183,7 @@ class ExampleApp(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     @pyqtSlot()
     def run_demod(self):
         script = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'demodulator/noaa_demodulate.py')
-        cmd = ['-u', script, '-r', str(self.demod_baud_rate), '-f', self.textDemodInput.toPlainText(), '-o', self.textDemodOutput.toPlainText()]
+        cmd = ['-u', script, '-v', str(self.demod_log_level),'-r', str(self.demod_baud_rate), '-f', self.textDemodInput.toPlainText(), '-o', self.textDemodOutput.toPlainText()]
 
         self.reader.start('python2.7', cmd)
 

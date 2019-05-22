@@ -28,13 +28,19 @@ def usage():
     """Prints help message."""
     print("Usage:")
     print("     -f <file>:         Input file (required)")
-    print("     -r sample_rate:    Sample rate (default=56200)")
+    print("     -r sample_rate:    Sample rate (default=56250)")
     print("     -o <file>:         Output file (default=demod_imag.raw)")
+    print("     -v <level>:        Set logging level")
+    print("                          0: No output")
+    print("                          1: Info (default)")
+    print("                          2: Debug")
+    print("                          3: All")
     sys.exit()
 
 class noaa_demodulate(gr.top_block):
-    def __init__(self, input_filename, _samp_rate, bs_format, output_filename):
+    def __init__(self, input_filename, _samp_rate, output_filename):
         gr.top_block.__init__(self, "Noaa Demodulator")
+
 
         ##################################################
         # Variables
@@ -90,22 +96,22 @@ class noaa_demodulate(gr.top_block):
 def main():
     filename = ''  # input file
     outputFilename = 'demod.raw'
-    bsFormat = 0;
+    verbose = 1
     sampleRate = 56250
 
     # Process Options
-    ops = ['-f', '-i', '-o', '-r']
+    ops = ['-f', '-o', '-r', '-v']
 
     while len(sys.argv) > 1:
         op = sys.argv.pop(1)
         if op == '-f':
             filename = sys.argv.pop(1)
-        if op == '-i':
-            bsFormat = int(sys.argv.pop(1))
         if op == '-r':
             sampleRate = int(sys.argv.pop(1))
         if op == '-o':
             outputFilename = sys.argv.pop(1)
+        if op == '-v':
+            verbose = int(sys.argv.pop(1))
         if op not in ops:
             print("Unknown option:")
             usage()
@@ -118,29 +124,35 @@ def main():
         print("Error accessing file:", filename)
         usage()
 
-    print "Input file: %s" % filename
+    if verbose > 0:
+        print "Processing file: %s" % filename
 
-    print "Demodulate to %s" % outputFilename
+    if verbose > 1:
+        print 'Size: %d bits' % size
 
-    # Probably not working
-    # Need bigger file for testing and debugging :)
-    def _progress_bar():
-        with tqdm(total=100) as pbar:
-            for i in range(100):
-                time.sleep(size/(1000.0*sampleRate*24*6.6))
-                pbar.update(1)
+    if verbose > 0:
+        print 'Duration: %0.2fs' % (size / (64 * sampleRate))
+        print "Save ouput to %s" % outputFilename
+
+    if verbose > 0:
+        def _progress_bar():
+            with tqdm(total=100) as pbar:
+                for i in range(100):
+                    time.sleep(size/(1000.0*sampleRate*24*6.7))
+                    pbar.update(1)
 
 
-    _progress_bar_thread = threading.Thread(target=_progress_bar)
-    _progress_bar_thread.daemon = True
-    _progress_bar_thread.start()
+        _progress_bar_thread = threading.Thread(target=_progress_bar)
+        _progress_bar_thread.daemon = True
+        _progress_bar_thread.start()
 
     try:
-        noaa_demodulate(filename, sampleRate, bsFormat, outputFilename).run()
+        noaa_demodulate(filename, sampleRate, outputFilename).run()
     except [[KeyboardInterrupt]]:
         pass
 
-    print "Done."
+    if verbose > 0:
+        print "Done."
 
 
 if __name__ == '__main__':
