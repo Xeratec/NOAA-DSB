@@ -39,11 +39,31 @@
         <bool>true</bool>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="insertPolicy">
         <enum>QComboBox::InsertAlphabetically</enum>
        </property>
+       <item>
+        <property name="text">
+         <string>9600</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>14400</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>19200</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>38400</string>
+        </property>
+       </item>
        <item>
         <property name="text">
          <string>48000</string>
@@ -51,7 +71,17 @@
        </item>
        <item>
         <property name="text">
-         <string>562500</string>
+         <string>56250</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>57600</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>115200</string>
         </property>
        </item>
       </widget>
