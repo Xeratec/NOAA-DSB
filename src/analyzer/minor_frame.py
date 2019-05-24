@@ -19,13 +19,20 @@ The code documentations uses 'w' for 'word' and 'b' for 'bit'
 Word number 3 is described as '3w'
 """
 
+"""
+TODO
+* Write function documentation
+* Finish implementation
+"""
+
+
 import datetime
 from dataclasses import dataclass
 
 class MinorFrame:
-    # 1 Minor Frame
-    # 103 words total
-    # 824 bits total
+    # 1 Minor Frame is
+    # 104 words total
+    # 832 bits total
 
     # Raw minor frame data
     raw = None
@@ -198,7 +205,7 @@ class MinorFrame:
     dcs_2 = None
 
     # SBUF/2
-    # 24 bit total
+    # 32 bit total
     # 36-37w:
     # 80-81w:   8 Bit words are formed by the SBUV/2 experiment and read out by the telemetry
     #           system at an average rate of 40 words per second.
@@ -246,7 +253,7 @@ class MinorFrame:
     #               01: All CPU A data received; CPU B data incomplete
     #               10: All CPU B data received; CPU A data incomplete
     #               11: CPU A and CPU B data incomplete
-    cpu_data_sataus = None
+    cpu_data_status = None
 
     # Parity
     # 6 bit total
@@ -274,7 +281,7 @@ class MinorFrame:
     @dataclass
     class Data:
          """
-         Return from get methods
+         Returned object of get-methods
          Attributes:
             :key data: bitstring or class (Status). Data
             :key data: boolean. Parity bit valid for data
@@ -283,6 +290,8 @@ class MinorFrame:
          parity = None
 
     def __init__(self, raw=None):
+        if raw is None: raise ValueError
+
         self.raw = raw
         self.syncword = raw[0:24]
         self.status = raw[24:30]
@@ -301,7 +310,7 @@ class MinorFrame:
         self.hirs_4 = raw[128:144] + raw[176:192] + raw[208:224] + raw[240:256] \
                     + raw[272:288] + raw[304:320] + raw[336:352] + raw[432:448] \
                     + raw[464:480] + raw[496:512] + raw[528:544] + raw[560:576] \
-                    + raw[592:608] + raw[624:640] + raw[656:672] + raw[762:688] \
+                    + raw[592:608] + raw[624:640] + raw[656:672] + raw[672:688] \
                     + raw[704:720] + raw[736:752]
         self.sem = raw[160:176]
         self.dcs_2 = raw[144:160] + raw[192:208] + raw[224:240] + raw[256:272] \
@@ -312,33 +321,43 @@ class MinorFrame:
         self.cpu_a_telemetry = raw[368:416]
         self.cpu_b_telemetry = raw[768:816]
         self.miu_data = raw[816:824]
-        self.cpu_data_sataus = raw[824:826]
+        self.cpu_data_status = raw[824:826]
         self.parity = raw[826:832]
 
-    def partiy_check(self):
-        """Perform parity check on minor frame
+    # TODO
+    def get_spacraft(self):
+        return NotImplemented
 
-        :return valid: bool.
-        """
-        if self.raw[16:152].count(1) % 2 != self.parity[0]:
-            return False
-        if self.raw[152:288].count(1) % 2 != self.parity[1]:
-            return False
-        if self.raw[288:424].count(1) % 2 != self.parity[2]:
-            return False
-        if self.raw[424:560].count(1) % 2 != self.parity[3]:
-            return False
-        if self.raw[560:696].count(1) % 2 != self.parity[4]:
-            return False
-        if self.raw[696:831].count(1) % 2 != self.parity[5]:
-            return False
+    def get_status(self):
+        s = self.Status()
+        s.major_frame_count = int(self.status[4:7].to01(), 2)
+        s.cmd_verification_status = int(self.status[0:2].to01(), 2)
+        s.tip_status = int(self.status[2:4].to01(), 2)
 
-        return True
+        r = self.Data()
+        r.parity = True if self.parity_check().data[0] else False
+        r.data = s
+
+        return r
+
+    def get_dwell_address(self):
+        r = self.Data()
+        r.parity =  True if self.parity_check().data[0]  else False
+        r.data = int(self.dwell_mode_address.to01(), 2)
+
+        return r
 
     def get_count(self):
         r = self.Data()
-        r.parity = 1 if self.parity[0] else 0
+        r.parity = True if self.parity_check().data[0] else False
         r.data = int(self.count.to01(), 2)
+        return r
+
+    def get_command_verification(self):
+        r = self.Data()
+        r.parity = True if self.parity_check().data[0]  else False
+        r.data = self.command_verification
+
         return r
 
     def get_timestamp(self):
@@ -349,20 +368,67 @@ class MinorFrame:
         hms = datetime.timedelta(days=day_count, milliseconds=hour_minute_second)
 
         r = self.Data()
-        r.parity = 1 if self.parity[0] else 0
+        r.parity = True if self.parity_check().data[0]  else False
         r.data = hms
 
         return r
 
-    def get_status(self):
-        s = self.Status()
-        s.major_frame_count = int(self.status[4:7].to01(), 2)
-        s.cmd_verification_status = int(self.status[0:2].to01(),2 )
-        s.tip_status = int(self.status[2:4].to01(), 2)
+    # TODO
+    # Data on multi frames
+    def get_subcom_1(self):
+        return NotImplemented
 
+    # Data on multi frames
+    # No documentation?
+    def get_subcom_2(self):
+        return NotImplemented
+
+    # No documentation?
+    def get_dau(self):
+        return NotImplemented
+
+    # Data on multi frames
+    def get_hirs_4(self):
+        return self.hirs_4
+
+    def get_sem(self):
+        return self.sems
+
+    def get_dcs_2(self):
+        return NotImplemented
+
+    # No documentation?
+    def get_sbuv_2(self):
+        return NotImplemented
+
+    # No documentation?
+    def get_cpu_telemetry(self):
+        return NotImplemented
+
+    def get_cpu_data_status(self):
+        return self.cpu_data_status
+
+    def parity_check(self):
+        """Perform parity check on minor frame
+
+        :return valid: bool.
+        """
         r = self.Data()
-        r.parity = 1 if self.parity[0] else 0
-        r.data = s
+        r.data = [True, True, True, True, True, True]
+        r.parity = True
+        if self.raw[16:152].count(1) % 2 != self.parity[0]:
+            r.data[0] = False
+        if self.raw[152:288].count(1) % 2 != self.parity[1]:
+            r.data[1] = False
+        if self.raw[288:424].count(1) % 2 != self.parity[2]:
+            r.data[2] = False
+        if self.raw[424:560].count(1) % 2 != self.parity[3]:
+            r.data[3] = False
+        if self.raw[560:696].count(1) % 2 != self.parity[4]:
+            r.data[4] = False
+        if self.raw[696:831].count(1) % 2 != self.parity[5]:
+            r.data[5] = False
+            r.parity = False
 
         return r
 
