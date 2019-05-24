@@ -11,6 +11,9 @@ Python Version: 3
 Example:
     $ python noaa_decode.py -f ../../RandomGnuRadioStuff/6_bits_dcblock2.raw -v 1 -i 1
     $ python noaa_decode.py -f ../test/demod_imag.raw -v 2 -o ../test/NOAA-18.txt
+
+The TIP format is based on a major frame which contains 320 minor frames.
+The Major Frame consists of 320 0.1 second Minor Frames
 """
 
 
@@ -139,7 +142,7 @@ def print_format(bs, perLine=64):
     for i in range(0, bs.length(), perLine):
         print("%04d: %s" % (i//perLine,bs[i:i+perLine].to01()))
 
-def party_check(minorFrame):
+def partiy_check(minorFrame):
     """Perform parity check on minor frame
 
     :param minorFrame: bitarray.
@@ -313,21 +316,23 @@ def main():
         else:
             print("Detected Satellite: %d => UFO!!" % spacecraft)
 
+    # Do parity checks in analyzer
     # Parity checks
-    tmpMinorFrames= []
-    for idx in range(0, len(minorFrames)):
-        if not party_check(minorFrames[idx]):
-            if verbose > 1:
-                print("Parityerror in frame %d" % idx)
-                if verbose > 2:
-                    print_format(minorFrames[idx], CLI_WIDTH)
-                    print()
-        else:
-            tmpMinorFrames.append(minorFrames[idx])
-    minorFrames = tmpMinorFrames.copy()
-    if verbose > 0:
-       print("Error free frames:", len(minorFrames))
-
+    # tmpMinorFrames= []
+    # for idx in range(0, len(minorFrames)):
+    #     if not partiy_check(minorFrames[idx]):
+    #         if verbose > 1:
+    #             print("Parityerror in frame %d" % idx)
+    #     else:
+    #         tmpMinorFrames.append(minorFrames[idx])
+    # minorFrames = tmpMinorFrames.copy()
+    # if verbose > 0:
+    #    print("Error free frames:", len(minorFrames))
+    #
+    # if verbose > 2:
+    #     for minorFrame in minorFrames:
+    #         print_format(minorFrame, CLI_WIDTH)
+    #         print()
     # Save output to file
     try:
         outputFiledescriptor = open(outputFilename, "w")

@@ -206,7 +206,11 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         text = file.read()
 
         file.close()
-        QtWidgets.QMessageBox.about(self, "About noaa_dsb", text.strip())
+        msg = QtWidgets.QMessageBox()
+        msg.setInformativeText(text.strip())
+        msg.setWindowTitle("About NOAA DSB Decoder")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.exec_()
 
 
 
@@ -215,7 +219,11 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         text = file.read()
 
         file.close()
-        msg = QtWidgets.QMessageBox().about(self, "License", text.strip())
+        msg = QtWidgets.QMessageBox()
+        msg.setInformativeText(text.strip())
+        msg.setWindowTitle("License")
+        msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        msg.exec_()
     #
     # Utility
     #
