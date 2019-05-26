@@ -40,13 +40,13 @@ philip.wiese@maketec.ch
 
 """
 TODO
-* Write function documentation
 * Finish implementation
 """
 
 
 import datetime
 from dataclasses import dataclass
+from bitarray import bitarray
 
 class MinorFrame:
     # 1 Minor Frame is
@@ -140,7 +140,7 @@ class MinorFrame:
 
     # Digital "B" Subcom-2
     # 8 bit total
-    # 12w:   The subcommutation of discrete inputs collected to form 8 Bit words.
+    # 12w:  The subcommutation of discrete inputs collected to form 8 Bit words.
     #       256 discrete inputs (32 words) can be accommodated. It takes 32 minor frames
     #       to sample all inputs once (sampling rate=once/3.2 sec). A Major Frame contains
     #       10 complete Digital “B” subcommutated frames.
@@ -172,7 +172,8 @@ class MinorFrame:
     #       telemetry system at an average of 10 words per second.
     dau_2 = None
 
-    # HIRS/4
+    # HIRS
+    # HIRS/3, HIRS/4 on NOAA-N (18), -N’ (19)
     # 288 bit total
     # 16-17w:
     # 22-23w:
@@ -191,9 +192,9 @@ class MinorFrame:
     # 82-83w:
     # 84-85w:
     # 88-89w:
-    # 92-93w:   8 Bit words are formed by the HIRS/3 experiment and are read out by the telemetry
+    # 92-93w:   8 Bit words are formed by the HIRS experiment and are read out by the telemetry
     #           system at an average rate of 360 words per second.
-    hirs_4 = None
+    hirs = None
 
     # SEM
     # 16 bit total
@@ -303,83 +304,138 @@ class MinorFrame:
          Returned object of get-methods
          Attributes:
             :key data: bitstring or class (Status). Data
-            :key data: boolean. Parity bit valid for data
+            :key parity: boolean. Parity bit valid for data
          """
          data = None
          parity = None
 
-    def __init__(self, raw=None):
-        if raw is None: raise ValueError
+    def __init__(self, __raw=None):
+        """
+        Construction for MinorFrame class
+        :type __raw: bitstring, String
+        :param __raw: bitstring or String. Required
+        """
+        if __raw is None: raise ValueError
 
-        self.raw = raw
-        self.syncword = raw[0:24]
-        self.status = raw[24:30]
-        self.dwell_mode_address = raw[30:39]
-        self.count = raw[39:48]
-        self.command_verification = raw[48:64]
-        self.time_code = raw[64:104]
-        self.digital_b_subcom_1 = raw[64:72]
-        self.analog_subcom_1_32 = raw[72:80]
-        self.analog_subcom_1_16 = raw[80:88]
-        self.analog_subcom_1_1 = raw[88:96]
-        self.digital_b_subcom_2 = raw[96:104]
-        self.analog_subcom_2_16 = raw[104:112]
-        self.dau_1 = raw[112:120]
-        self.dau_2 = raw[120:128]
-        self.hirs_4 = raw[128:144] + raw[176:192] + raw[208:224] + raw[240:256] \
-                    + raw[272:288] + raw[304:320] + raw[336:352] + raw[432:448] \
-                    + raw[464:480] + raw[496:512] + raw[528:544] + raw[560:576] \
-                    + raw[592:608] + raw[624:640] + raw[656:672] + raw[672:688] \
-                    + raw[704:720] + raw[736:752]
-        self.sem = raw[160:176]
-        self.dcs_2 = raw[144:160] + raw[192:208] + raw[224:240] + raw[256:272] \
-                   + raw[320:336] + raw[352:368] + raw[416:432] + raw[448:464] \
-                   + raw[480:496] + raw[512:528] + raw[544:560] + raw[576:592] \
-                   + raw[608:624] + raw[688:704] + raw[720:736] + raw[752:768]
-        self.sbuv_2 = raw[288:304] + raw[640:656]
-        self.cpu_a_telemetry = raw[368:416]
-        self.cpu_b_telemetry = raw[768:816]
-        self.miu_data = raw[816:824]
-        self.cpu_data_status = raw[824:826]
-        self.parity = raw[826:832]
+        self.raw = __raw
 
-    # TODO
+        if isinstance(self.raw, str):
+            self.raw = self.raw.replace(" ", "")
+            self.raw = self.raw.replace("\n", "")
+
+            bitStream = ''
+            for elem in self.raw:
+                bitStream += bin(int(elem, 16))[2:].zfill(4)
+
+            self.raw = bitarray(bitStream)
+
+        self.syncword = self.raw[0:24]
+        self.status = self.raw[24:30]
+        self.dwell_mode_address = self.raw[30:39]
+        self.count = self.raw[39:48]
+        self.command_verification = self.raw[48:64]
+        self.time_code = self.raw[64:104]
+        self.digital_b_subcom_1 = self.raw[64:72]
+        self.analog_subcom_1_32 = self.raw[72:80]
+        self.analog_subcom_1_16 = self.raw[80:88]
+        self.analog_subcom_1_1 = self.raw[88:96]
+        self.digital_b_subcom_2 = self.raw[96:104]
+        self.analog_subcom_2_16 = self.raw[104:112]
+        self.dau_1 = self.raw[112:120]
+        self.dau_2 = self.raw[120:128]
+        self.hirs = self.raw[128:144] + self.raw[176:192] + self.raw[208:224] + self.raw[240:256] \
+                    + self.raw[272:288] + self.raw[304:320] + self.raw[336:352] + self.raw[432:448] \
+                    + self.raw[464:480] + self.raw[496:512] + self.raw[528:544] + self.raw[560:576] \
+                    + self.raw[592:608] + self.raw[624:640] + self.raw[656:672] + self.raw[672:688] \
+                    + self.raw[704:720] + self.raw[736:752]
+        self.sem = self.raw[160:176]
+        self.dcs_2 = self.raw[144:160] + self.raw[192:208] + self.raw[224:240] + self.raw[256:272] \
+                   + self.raw[320:336] + self.raw[352:368] + self.raw[416:432] + self.raw[448:464] \
+                   + self.raw[480:496] + self.raw[512:528] + self.raw[544:560] + self.raw[576:592] \
+                   + self.raw[608:624] + self.raw[688:704] + self.raw[720:736] + self.raw[752:768]
+        self.sbuv_2 = self.raw[288:304] + self.raw[640:656]
+        self.cpu_a_telemetry = self.raw[368:416]
+        self.cpu_b_telemetry = self.raw[768:816]
+        self.miu_data = self.raw[816:824]
+        self.cpu_data_status = self.raw[824:826]
+        self.parity = self.raw[826:832]
+
     def get_spacraft(self):
-        return NotImplemented
-
-    def get_status(self):
-        s = self.Status()
-        s.major_frame_count = int(self.status[4:7].to01(), 2)
-        s.cmd_verification_status = int(self.status[0:2].to01(), 2)
-        s.tip_status = int(self.status[2:4].to01(), 2)
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: string. spacecraft name
+        """
+        spacecraft = self.syncword[-4]
 
         r = self.Data()
-        r.parity = True if self.parity_check().data[0] else False
+
+        # May be 8 not clear, different sources
+        if spacecraft == 8:
+            r.parity = True if self.get_parity().data[0] else False
+            r.data = "NOAA-15"
+        elif spacecraft == 13:
+            r.parity = True if self.get_parity().data[0] else False
+            r.data = "NOAA-18"
+        elif spacecraft == 15:
+            r.parity = True if self.get_parity().data[0] else False
+            r.data = "NOAA-19"
+        else:
+            r.parity = True if self.get_parity().data[0] else False
+            r.data = "NOAA-19"
+
+        return r
+
+    def get_status(self):
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: Status. Object with  major_frame_count, cmd_verification_status,tip_status
+        """
+        s = self.Status()
+        s.major_frame_count = int(self.status[3:6].to01(), 2)
+        s.cmd_verification_status = self.status[0]
+        s.tip_status = int(self.status[1:3].to01(), 2)
+
+        r = self.Data()
+        r.parity = True if self.get_parity().data[0] else False
         r.data = s
 
         return r
 
     def get_dwell_address(self):
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: binary string. dwell mode address of analog channel
+        """
         r = self.Data()
-        r.parity =  True if self.parity_check().data[0]  else False
+        r.parity =  True if self.get_parity().data[0]  else False
         r.data = int(self.dwell_mode_address.to01(), 2)
 
         return r
 
     def get_count(self):
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: int. Minor frame number
+        """
         r = self.Data()
-        r.parity = True if self.parity_check().data[0] else False
+        r.parity = True if self.get_parity().data[0] else False
         r.data = int(self.count.to01(), 2)
         return r
 
-    def get_command_verification(self):
-        r = self.Data()
-        r.parity = True if self.parity_check().data[0]  else False
-        r.data = self.command_verification
 
-        return r
+    def get_command_verification(self):
+        return NotImplemented
 
     def get_timestamp(self):
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: datetime. Day of the year and UTC spacecraft time
+        """
         if self.get_count().data != 0: return None
 
         day_count = int(self.time_code[0:9].to01(),2)
@@ -387,12 +443,11 @@ class MinorFrame:
         hms = datetime.timedelta(days=day_count, milliseconds=hour_minute_second)
 
         r = self.Data()
-        r.parity = True if self.parity_check().data[0]  else False
+        r.parity = True if self.get_parity().data[0]  else False
         r.data = hms
 
         return r
 
-    # TODO
     # Data on multi frames
     def get_subcom_1(self):
         return NotImplemented
@@ -407,11 +462,30 @@ class MinorFrame:
         return NotImplemented
 
     # Data on multi frames
-    def get_hirs_4(self):
-        return self.hirs_4
+    # TODO
+    def get_hirs(self):
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: Not yet Impemented
+        """
+        r = self.Data()
+        r.parity = 1 if all(self.get_parity().data) else 0
+        r.data = NotImplemented
+        return r
 
+    # Data on multi frames
+    # TODO
     def get_sem(self):
-        return self.sems
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: bitstring. Raw SEM data
+        """
+        r = self.Data()
+        r.parity = True if self.get_parity().data[1] else False
+        r.data = self.sem
+        return r
 
     def get_dcs_2(self):
         return NotImplemented
@@ -425,12 +499,31 @@ class MinorFrame:
         return NotImplemented
 
     def get_cpu_data_status(self):
-        return self.cpu_data_status
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: string. CPU Data complete or inclomplete
+        """
+        r = self.Data()
+        r.parity = True if self.get_parity().data[5]  else False
+        if self.cpu_data_status.to01() == '00':
+            r.data = "All"
+        elif self.cpu_data_status.to01() == '00':
+            r.data = "All CPU A"
+        elif self.cpu_data_status.to01() == '00':
+            r.data = "All CPU B"
+        elif self.cpu_data_status.to01() == '00':
+            r.data = "Not complete"
+        else:
+            r.data = "Unknown"
+        return r
 
-    def parity_check(self):
-        """Perform parity check on minor frame
-
-        :return valid: bool.
+    def get_parity(self):
+        """
+        Perform parity check on minor frame
+        :rtype: Data
+        :return parity: int. Validity of parity bits
+        :return data: bool array. validity of blocks
         """
         r = self.Data()
         r.data = [True, True, True, True, True, True]
@@ -451,4 +544,75 @@ class MinorFrame:
 
         return r
 
+    def __str__(self):
+        return self.report(0)
+
+    def __str_debug(self, msg, desc=""):
+        s = ""
+        if isinstance(msg, self.Data):
+            if isinstance(msg.data, datetime.datetime):
+                s += "\n%s: (%d) %s" % (desc, msg.parity, msg.data)
+            elif isinstance(msg.data, self.Status):
+                s+= "Status-CVS : (%d) %s" % (msg.parity, msg.data.cmd_verification_status)
+                s+= "\nStatus-TIPS: (%d) %s" % (msg.parity, msg.data.tip_status)
+                s+= "\nStatus-MFC : (%d) %s" % (msg.parity, msg.data.major_frame_count)
+            else:
+                s+= "%s : (%d) %s" % (desc, msg.parity, msg.data)
+
+        elif isinstance(msg, bitarray):
+            s += "%s:  %3d %s" % (desc, int(msg.length()), msg)
+        else:     
+            s += "%s :     %s" % (desc, msg)
+        return s
+
+
+    def __repr__(self):
+        return "\nMinorFrame (%d,%d)" % (self.get_status().data.major_frame_count, self.get_count().data)
+
+    def report(self, verbose=0):
+        s = ""
+        if verbose > 0:
+            s += "### RAW Frame Object ###"
+            s += '\n' + "Type    | Len | Data"
+            s += '\n' + "---------------------"
+            s += '\n' + self.__str_debug(self.raw, "RAW     ")
+            s += '\n' + self.__str_debug(self.syncword, "Sync    ")
+            s += '\n' + self.__str_debug(self.status, "Status  ")
+            s += '\n' + self.__str_debug(self.dwell_mode_address, "DWELL   ")
+            s += '\n' + self.__str_debug(self.count, "Count   ")
+            s += '\n' + self.__str_debug(self.command_verification, "CMV     ")
+            s += '\n' + self.__str_debug(self.time_code, "Time    ")
+            s += '\n' + self.__str_debug(self.digital_b_subcom_1, "DBS1    ")
+            s += '\n' + self.__str_debug(self.analog_subcom_1_32, "AS1 32  ")
+            s += '\n' + self.__str_debug(self.analog_subcom_1_16, "AS1 16  ")
+            s += '\n' + self.__str_debug(self.analog_subcom_1_1, "AS1 1   ")
+            s += '\n' + self.__str_debug(self.digital_b_subcom_2, "DBS2    ")
+            s += '\n' + self.__str_debug(self.analog_subcom_2_16, "AS2 16  ")
+            s += '\n' + self.__str_debug(self.dau_1, "DAU1    ")
+            s += '\n' + self.__str_debug(self.dau_2, "DAZ2    ")
+            s += '\n' + self.__str_debug(self.hirs, "HIRS    ")
+            s += '\n' + self.__str_debug(self.sem, "SEM     ")
+            s += '\n' + self.__str_debug(self.dcs_2, "DCS2    ")
+            s += '\n' + self.__str_debug(self.sbuv_2, "SBUV    ")
+            s += '\n' + self.__str_debug(self.cpu_a_telemetry, "CPUA Tel")
+            s += '\n' + self.__str_debug(self.cpu_b_telemetry, "CPUB Tel")
+            s += '\n' + self.__str_debug(self.miu_data, "MIU     ")
+            s += '\n' + self.__str_debug(self.cpu_data_status, "CPU Stat")
+            s += '\n' + self.__str_debug(self.parity, "Parity  ")
+            s += '\n\n'
+
+        s += "### RAW Frame Object Functions ###"
+        s += "\nType         |P| Data   (P Parity)"
+        s += "\n---------------------"
+        s += '\n' + self.__str_debug(self.get_spacraft(), "ID        ")
+        s += '\n' + self.__str_debug(self.get_parity(), "Parity    ")
+        s += '\n' + self.__str_debug(self.get_status(), "Status    ")
+        s += '\n' + self.__str_debug(self.get_count(), "Count     ")
+        s += '\n' + self.__str_debug(self.get_timestamp(), "Time      ")
+        s += '\n' + self.__str_debug(self.get_dwell_address(), "Dwell     ")
+        s += '\n' + self.__str_debug(self.get_cpu_data_status(), "CPU Status")
+        # s += '\n' + self.__str_debug(self.get_hirs(), "HIRS    ")
+        s += '\n'
+
+        return s
 

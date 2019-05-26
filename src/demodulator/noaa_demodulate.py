@@ -43,8 +43,15 @@ import threading
 import pmt
 import sys
 
-def usage():
+def usage(copyright = 0):
     """Prints help message."""
+    if copyright:
+        print("Copyright (C) 2019  Philip Wiese")
+        print("This program comes with ABSOLUTELY NO WARRANTY.")
+        print("This is free software, and you are welcome to redistribute it")
+        print("under certain conditions.)")
+        print()
+
     print("Usage:")
     print("     -f <file>:         Input file (required)")
     print("     -r sample_rate:    Sample rate (default=56250)")
@@ -133,7 +140,7 @@ def main():
             verbose = int(sys.argv.pop(1))
         if op not in ops:
             print("Unknown option:")
-            usage()
+            usage(copyright=1)
 
     if filename is '':
         usage()

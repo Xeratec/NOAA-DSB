@@ -98,6 +98,16 @@ def decodeMEPED(majorFrame, time):
         return
 
 
+# The TIP formatter
+# calls out groups of 8-bit words in a sequence that multiplexes HIRS/4 data with that of other
+# instruments on the NOAA-N, -N’ spacecraft. Along with this requirement, the large quantity of
+# instrument data to be transmitted and the use of 13-bit encoding of radiometric data, it was not
+# possible to format the data into 8-bit segments. The HIRS/4 data is therefore provided as a
+# continuous stream composed of 13-bit word lengths but clocked out in 8-bit words by the TIP.
+# During any Minor Frame there are 288 bits of HIRS data which are extracted at an equivalent
+# 8,320 bps rate.
+def decode_hirs():
+    return NotImplemented
 
 
 

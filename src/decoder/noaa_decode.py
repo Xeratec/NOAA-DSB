@@ -5,7 +5,7 @@
 File name: noaa_decode.py
 Author: Philip Wiese
 Date created: 15.05.2019
-Date last modified: 17.05.2019
+Date last modified: 25.05.2019
 Python Version: 3
 
 Example:
@@ -47,8 +47,14 @@ CLI_WIDTH = 64
 SyncWord = bitarray('1110110111100010000')
 dt = 1 / (8320 * 2)
 
-def usage():
+def usage(copyright = 0):
     """Prints help message."""
+    if copyright:
+        print("Copyright (C) 2019  Philip Wiese")
+        print("This program comes with ABSOLUTELY NO WARRANTY.")
+        print("This is free software, and you are welcome to redistribute it")
+        print("under certain conditions.)")
+        print()
     print("Usage:")
     print("     -f <file>:  Input file (required)")
     print("     -c <size>:  Number of bytes to analyze (-1 for everything, default)")
@@ -224,7 +230,7 @@ def main():
             outputFilename = sys.argv.pop(1)
         if op not in ops:
             print("Unknown option:")
-            usage()
+            usage(copyright=1)
 
     # Grab file data
     try:
@@ -352,6 +358,7 @@ def main():
     #     for minorFrame in minorFrames:
     #         print_format(minorFrame, CLI_WIDTH)
     #         print()
+
     # Save output to file
     try:
         outputFiledescriptor = open(outputFilename, "w")
