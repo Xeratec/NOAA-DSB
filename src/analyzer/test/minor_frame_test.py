@@ -38,7 +38,7 @@ from bitarray import bitarray
 def main():
     rawStream = open("../../NOAA_DSB_MinorFrames.txt").readlines()
 
-    print_zero_frames(rawStream)
+    print_zero_frames(rawStream, 1)
     #print_n_frames(rawStream, num=10, skip=166, filter='none', verbose=0)
 
 def print_zero_frames(rawStream, verbose=0):

@@ -47,7 +47,7 @@ def main():
     # Create minor frames from stream
     all_minor_frames: List[MinorFrame] = [MinorFrame(x) for x in rawStream]
 
-    minor_frame_filter = all_minor_frames
+    minor_frame_filter: List[MinorFrame] = all_minor_frames
 
     for i in range(1, len(minor_frame_filter)-1):
         if i >= len(minor_frame_filter)-1: break
@@ -90,6 +90,14 @@ def main():
     print("### Parity Check Filtering ###")
     print(major_frames)
 
+    for major_frame in major_frames:
+        print(major_frame.report())
+
+    # Select best frame
+    top_frame: MajorFrame = major_frames[0]
+    for major_frame in major_frames:
+        if major_frame.get_score() > top_frame.get_score():
+            top_frame = major_frame
 
 if __name__ == "__main__":
     main()

@@ -45,23 +45,27 @@ TODO
 
 
 import datetime
+from typing import List, Union, List, ClassVar
 from dataclasses import dataclass
 from bitarray import bitarray
 
-class MinorFrame:
+
+
+
+class MinorFrame(object):
     # 1 Minor Frame is
     # 104 words total
     # 832 bits total
 
     # Raw minor frame data
-    raw = None
+    raw: ClassVar[bitarray] = None
 
     # Frame Sync and Spacecraft ID
     # 24 bit total
     # 0w: 11101101 (MSB) is first)
     # 1w: 11100010
     # 2w: 0000AAAA (Last 4 bits are spacecraft ID)
-    syncword = None
+    syncword: ClassVar[bitarray] = None
 
     # Status
     # 6b total
@@ -69,26 +73,26 @@ class MinorFrame:
     # 3w, 2-3b: TIP status; 00=orbital mode;10=CPU Memory Dump Mode;01=Dwell Mode;11=Boost Mode
     # 3w, 4-6b: Major Frame Count; 000 Major Frame 0; 111=Major Frame 7; MSB first; Counter
     #           incremented every 320 minor frames
-    status = None
+    status: ClassVar[bitarray] = None
 
     # Dwell Mode Address
     # 9 bit total
     # 3w, 7-8b:
     # 4w, 1-7b: 9 bit dwell mode address of analog channel that is being monitored continuously
-    dwell_mode_address = None
+    dwell_mode_address: ClassVar[bitarray] = None
 
     # Minor Frame Count
     # 9 bit total
     # 4w, 8b:
     # 5w, 1-8b: 000000000=Minor Frame 0, 100111111-Minor frame 319
-    count = None
+    count: ClassVar[bitarray] = None
 
     # Command Verification
     # 16b total
     # 6w
     # 7w: Bits 9 thru 24 of each valid received or stored command word are placed in
     #     the 16 bit slots of telemetry words 6 and 7 on a one-for-one basis.
-    command_verification = None
+    command_verification: ClassVar[bitarray] = None
 
     # Time code (Minor Frame 0 only)
     # 40 bit total
@@ -105,7 +109,7 @@ class MinorFrame:
     # inserted is referenced to the beginning of the first bit
     # of the minor frame sync word of minor frame 0
     # within ∀ millisecond.
-    time_code = None
+    time_code: ClassVar[bitarray] = None
 
     # Digital "B" Subcom-1
     # 8 bit total
@@ -113,20 +117,20 @@ class MinorFrame:
     #       Inputs (32 words) can be accommodated. It takes 32 frames to sample all inputs once
     #       (sampling rate=once/3.2 sec). A Major Frame contains 10 complete Digital “B”
     #       subcommutated frames.
-    digital_b_subcom_1 = None
+    digital_b_subcom_1: ClassVar[bitarray] = None
 
     # Analog Subcom-1 (32 sec)
     # 8 bit total
     # 9w:   A subcommutation of up to 191 analog points sampled once every 32 seconds plus
     #       64 analog points sampled twice every 32 seconds (once every 16 seconds).
     #       Bit 1 of each word represents 2560 mV, while Bit 8 represents 20 mV.
-    analog_subcom_1_32 = None
+    analog_subcom_1_32: ClassVar[bitarray] = None
 
     # Analog Subcom-1 (16 sec)
     # 8 bit total
     # 10w:  This subcommutation is controlled by a PROM located in the TIP and contains
     #       160 word locations with 128 analog channels sampled once every 16 seconds.
-    analog_subcom_1_16 = None
+    analog_subcom_1_16: ClassVar[bitarray] = None
 
 
     # Analog Subcom-1 (1 sec)
@@ -136,7 +140,7 @@ class MinorFrame:
     #       filled with data from an analog point selected by command. The selected
     #       analog point may be one of the 512 analog points available to the TIP.
     #       Bit on of each word represents 2560 mV while Bit 8 represents 20 mV.
-    analog_subcom_1_1 = None
+    analog_subcom_1_1: ClassVar[bitarray] = None
 
     # Digital "B" Subcom-2
     # 8 bit total
@@ -148,7 +152,7 @@ class MinorFrame:
     #       XSU Digital “A” data. The XSU generates an 8 word subcom which is read out
     #       at the rate of one word per minor frame. The XSU subcom is synchronized with
     #       its word 1 in minor frame 24.
-    digital_b_subcom_2 = None
+    digital_b_subcom_2: ClassVar[bitarray] = None
 
     # Analog Subcom-2 (16)
     # 8 bit total
@@ -158,19 +162,19 @@ class MinorFrame:
     #       Commutator Unit (SATCU). The SATCU receives inputs from 16 sources on the
     #       solar array, commutates them and presents this stream and presents it in the last 32
     #       word locations. The 32 words represent two successive passes through the SATCU subcom.
-    analog_subcom_2_16 = None
+    analog_subcom_2_16: ClassVar[bitarray] = None
 
     # DAU-1
     # 8 bit total
     # 14w:  8 Bit Housekeeping Telemetry words are formed by the DAU-1 and read out by the
     #       telemetry system at an average of 10 words per second.
-    dau_1 = None
+    dau_1: ClassVar[bitarray] = None
 
     # DAU-1
     # 8 bit total
     # 15w:  8 Bit Housekeeping Telemetry words are formed by the DAU-2 and read out by the
     #       telemetry system at an average of 10 words per second.
-    dau_2 = None
+    dau_2: ClassVar[bitarray] = None
 
     # HIRS
     # HIRS/3, HIRS/4 on NOAA-N (18), -N’ (19)
@@ -194,14 +198,14 @@ class MinorFrame:
     # 88-89w:
     # 92-93w:   8 Bit words are formed by the HIRS experiment and are read out by the telemetry
     #           system at an average rate of 360 words per second.
-    hirs = None
+    hirs: ClassVar[bitarray] = None
 
     # SEM
     # 16 bit total
     # 20w:
     # 21w:  8 Bit words are formed by the SEM sensor and ready out by the telemetry system at
     #       an average rate of 20 words per second.
-    sem = None
+    sem: ClassVar[bitarray] = None
 
     # DCS-2
     # 256 bit total
@@ -222,28 +226,28 @@ class MinorFrame:
     # 90-91w:
     # 94-95w:   8 Bit words are formed by the DCS experiment and are read out by the telemetry
     #           system at an average rate of 320 words per second
-    dcs_2 = None
+    dcs_2: ClassVar[bitarray] = None
 
     # SBUF/2
     # 32 bit total
     # 36-37w:
     # 80-81w:   8 Bit words are formed by the SBUV/2 experiment and read out by the telemetry
     #           system at an average rate of 40 words per second.
-    sbuv_2 = None
+    sbuv_2: ClassVar[bitarray] = None
 
     # CPU A Telemetry
     # 48 bit total
     # 46-47w:
     # 48-49w:
     # 50-51w:  A second block of 16 Bit CPU words is ready out by the telemetry system every minor frame.
-    cpu_a_telemetry = None
+    cpu_a_telemetry: ClassVar[bitarray] = None
 
     # CPU B Telemetry
     # 48 bit total
     # 96-97w:
     # 98-99w:
     # 100-101w:  A second block of 16 Bit CPU words is ready out by the telemetry system every minor frame.
-    cpu_b_telemetry = None
+    cpu_b_telemetry: ClassVar[bitarray] = None
 
     # IMPORTANT! THIS MAY BE INCORRECT
     # MIU (MHS interface unit)
@@ -264,7 +268,7 @@ class MinorFrame:
     #               00: MIU 1
     #               01: MIU 2
     #               11: Single MIU
-    miu_data = None
+    miu_data: ClassVar[bitarray] = None
 
 
     # CPU Data Status
@@ -273,7 +277,7 @@ class MinorFrame:
     #               01: All CPU A data received; CPU B data incomplete
     #               10: All CPU B data received; CPU A data incomplete
     #               11: CPU A and CPU B data incomplete
-    cpu_data_status = None
+    cpu_data_status: ClassVar[bitarray] = None
 
     # Parity
     # 6 bit total
@@ -285,7 +289,7 @@ class MinorFrame:
     #               Bit 6: Even parity check in words 53 thru 69
     #               Bit 7: Even parity check in words 70 thru 86
     #               Bit 8: Even parity check in words 87 thru bit 7 of word 103
-    parity = [None, None, None, None, None, None]
+    parity: List[bool] = [None, None, None, None, None, None]
 
     @dataclass
     class Status:
@@ -294,22 +298,22 @@ class MinorFrame:
         TIP status; 00=orbital mode;10=CPU Memory Dump Mode;01=Dwell Mode;11=Boost Mode
         Major Frame Count; 000 Major Frame 0; 111=Major Frame 7; MSB first; Counter incremented every 320 minor frames
         """
-        major_frame_count = None
-        cmd_verification_status = None
-        tip_status = None
+        major_frame_count: bitarray = None
+        cmd_verification_status: bitarray = None
+        tip_status: bitarray = None
 
     @dataclass
     class Data:
-         """
-         Returned object of get-methods
-         Attributes:
-            :key data: bitstring or class (Status). Data
-            :key parity: boolean. Parity bit valid for data
-         """
-         data = None
-         parity = None
+        """
+        Returned object of get-methods
+        Attributes:
+        :key data: bitstring or class (Status). Data
+        :key parity: boolean. Parity bit valid for data
+        """
+        data: Union[bitarray, object, str, datetime.datetime] = None
+        parity: bool = None
 
-    def __init__(self, __raw=None):
+    def __init__(self, __raw: bitarray = None) -> None:
         """
         Construction for MinorFrame class
         :type __raw: bitstring, String
@@ -349,6 +353,12 @@ class MinorFrame:
                     + self.raw[592:608] + self.raw[624:640] + self.raw[656:672] + self.raw[672:688] \
                     + self.raw[704:720] + self.raw[736:752]
         self.sem = self.raw[160:176]
+
+        # TODO Hack Don't know why I have to invert this
+        # SEM data appears to be inverted!  *is it possible that MSB and LSB are interchanged?
+        #                                   *Double check this (parity calcs showed this to be an issue)
+        self.sem.invert()
+
         self.dcs_2 = self.raw[144:160] + self.raw[192:208] + self.raw[224:240] + self.raw[256:272] \
                    + self.raw[320:336] + self.raw[352:368] + self.raw[416:432] + self.raw[448:464] \
                    + self.raw[480:496] + self.raw[512:528] + self.raw[544:560] + self.raw[576:592] \
@@ -360,7 +370,7 @@ class MinorFrame:
         self.cpu_data_status = self.raw[824:826]
         self.parity = self.raw[826:832]
 
-    def get_spacraft(self):
+    def get_spacraft(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -386,7 +396,7 @@ class MinorFrame:
 
         return r
 
-    def get_status(self):
+    def get_status(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -403,7 +413,7 @@ class MinorFrame:
 
         return r
 
-    def get_dwell_address(self):
+    def get_dwell_address(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -415,7 +425,7 @@ class MinorFrame:
 
         return r
 
-    def get_count(self):
+    def get_count(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -430,7 +440,7 @@ class MinorFrame:
     def get_command_verification(self):
         return NotImplemented
 
-    def get_timestamp(self):
+    def get_timestamp(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -463,7 +473,7 @@ class MinorFrame:
 
     # Data on multi frames
     # TODO
-    def get_hirs(self):
+    def get_hirs(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -476,7 +486,7 @@ class MinorFrame:
 
     # Data on multi frames
     # TODO
-    def get_sem(self):
+    def get_sem(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -498,7 +508,7 @@ class MinorFrame:
     def get_cpu_telemetry(self):
         return NotImplemented
 
-    def get_cpu_data_status(self):
+    def get_cpu_data_status(self) -> Data:
         """
         :rtype: Data
         :return parity: int. Validity of information
@@ -518,7 +528,7 @@ class MinorFrame:
             r.data = "Unknown"
         return r
 
-    def get_parity(self):
+    def get_parity(self) -> Data:
         """
         Perform parity check on minor frame
         :rtype: Data
@@ -547,7 +557,7 @@ class MinorFrame:
     def __str__(self):
         return self.report(0)
 
-    def __str_debug(self, msg, desc=""):
+    def __str_debug(self, msg: Union[str, Data, bitarray], desc: str = ""):
         s = ""
         if isinstance(msg, self.Data):
             if isinstance(msg.data, datetime.datetime):
@@ -569,7 +579,7 @@ class MinorFrame:
     def __repr__(self):
         return "\nMinorFrame (%d,%d)" % (self.get_status().data.major_frame_count, self.get_count().data)
 
-    def report(self, verbose=0):
+    def report(self, verbose: int = 0):
         s = ""
         if verbose > 0:
             s += "### RAW Frame Object ###"
