@@ -132,3 +132,6 @@ top_block.py
 *.mat
 
 NOAA_DSB_MinorFrames.txt
+NOAA_DSB_Fram
+es.txt
+decoder/profile*

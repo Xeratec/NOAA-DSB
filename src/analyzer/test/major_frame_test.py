@@ -49,8 +49,6 @@ def main():
     minor_frame_filter = filter_before_next(all_minor_frames, 10, 3)
     minor_frame_filter = filter_mf_count(minor_frame_filter.copy(), 1)
 
-    print(minor_frame_filter)
-
     major_frames: List[MajorFrame] = []
     mf: List[MinorFrame] = []
 
@@ -89,6 +87,11 @@ def main():
     print()
     print("### Parity Check Filtering ###")
     print(major_frames)
+
+    for major_frame in major_frames:
+        print("###########################################################################")
+        print(major_frame.report(1))
+
 
 
 def filter_before_next(minor_frame_filter: List[MinorFrame], threshold=20, iterations = 2):

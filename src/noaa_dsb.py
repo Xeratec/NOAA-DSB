@@ -31,14 +31,16 @@ Contact:
 philip.wiese@maketec.ch
 
 TODO
-* Integration of Analyzer
+* Improve frame filter and slicer
+* Stop running demodulator and decoder if application is closed
+* Statistics
+* SEM Graph
 """
-
 
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QProcess, QTextCodec
-from PyQt5.QtGui import QTextCursor
+from PyQt5.QtGui import QTextCursor, QFont
 
 import sys
 import os
@@ -63,19 +65,22 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     decode_input_format = 0
     decode_log_level = 1
     analyze_log_level = 1
+    analyze_filter = 0
 
+    # Reference to telemetry module, handling the analyzation of the data
     telemetry = None
-
 
     def __init__(self):
         super(self.__class__, self).__init__()
-        self.setupUi(self)  # This is defined in design.py file automatically
-                            # It sets up layout and widgets that are defined
-        ui_stats = stats_widget.StatsWidget(self.wStats)
-        ui_sem = sem_widget.SEMWidget(self.wSEM)
+        # It sets up layout and widgets that are defined
+        self.setupUi(self)
 
         # To avoid circular dependencies
         from gui.telemetry import Telemetry
+
+        # Setting up Statistics, SEM and Telemetry
+        ui_stats = stats_widget.StatsWidget(self.wStats)
+        ui_sem = sem_widget.SEMWidget(self.wSEM)
         self.telemetry = Telemetry(widgetStats=ui_stats, widgetSEM=ui_sem, mainWindow=self)
 
         # create a process output reader
@@ -92,11 +97,17 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
             self.textDecodeOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/NOAA.txt")
             self.textAnalyzeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/NOAA_DSB_MinorFrames.txt")
 
+        self.twCentral.setCurrentIndex(0)
     #
     # Initialize statusbar
     #
     def create_status_bar(self):
+        font = QFont()
+        font.setFamily("Bitstream Vera Sans Mono")
+        font.setPointSize(10)
+
         self.status_text = QtWidgets.QLabel("Ready")
+        self.status_text.setFont(font)
         self.statusBar().addWidget(self.status_text, 1)
 
     #
@@ -200,11 +211,14 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         ui.setupUi(DialogAnalyzeSettings)
 
         ui.cbLogLevel.setCurrentIndex(self.analyze_log_level)
+        ui.cbFilterLevel.setCurrentIndex(self.analyze_filter)
 
         DialogAnalyzeSettings.show()
 
         if DialogAnalyzeSettings.exec_():
             self.analyze_log_level = ui.cbLogLevel.currentIndex()
+            self.analyze_filter = ui.cbFilterLevel.currentIndex()
+            self.run_analyze()
 
     #
     # Commands
@@ -226,9 +240,6 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     def run_analyze(self):
         self.telemetry.load_file(self.textAnalyzeInput.toPlainText())
 
-        return
-
-
     #
     # Menu entry
     #
@@ -243,8 +254,6 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msg.exec_()
 
-
-
     def onLicense(self):
         file = open('gui/license.txt', 'r')
         text = file.read()
@@ -257,7 +266,11 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         msg.exec_()
 
     def onMajorFrameChanged(self, int):
-        self.telemetry.set_minor_frame_combobox()
+        self.telemetry.update_major_frame_infos()
+
+    def onMinorFrameChanged(self, int):
+        self.telemetry.update_minor_frame_infos()
+
     #
     # Utility
     #
@@ -289,7 +302,7 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         cursor.movePosition(QTextCursor.End)
         self.tbProcess.setTextCursor(cursor)
 
-
+# Starting a programm and read out the output from stdout and stderr
 class ProcessOutputReader(QProcess):
     produce_output = pyqtSignal(str)
     produce_finished = pyqtSignal(int)
@@ -316,13 +329,12 @@ class ProcessOutputReader(QProcess):
     def onFinished(self, exitCode):
         self.produce_finished.emit(exitCode)
 
-
+# Run main app
 def main():
     app = QtWidgets.QApplication(sys.argv)  # A new instance of QApplication
     form = NOAA_DSB()                  # We set the form to be our ExampleApp (design)
     form.show()                         # Show the form
     app.exec_()                         # and execute the app
-
 
 if __name__ == '__main__':              # if we're running file directly and not importing it
     main()                              # run the main function    app.exec_()

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
-    <height>791</height>
+    <width>711</width>
+    <height>894</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -317,6 +317,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="1" column="2">
                  <widget class="QPushButton" name="bpAnalyzeSelect">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Select</string>
                   </property>
@@ -331,6 +334,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="1" column="0">
                  <widget class="QLabel" name="lAnalyzeOutpu">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="text">
                    <string>Output File</string>
                   </property>
@@ -366,6 +372,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="2" column="2" colspan="2">
                  <widget class="QPushButton" name="bpAnalyzeStart">
+                  <property name="enabled">
+                   <bool>true</bool>
+                  </property>
                   <property name="text">
                    <string>Analyze</string>
                   </property>
@@ -373,6 +382,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="1" column="1">
                  <widget class="QTextEdit" name="textAnalyzeOutput">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                     <horstretch>0</horstretch>
@@ -430,7 +442,7 @@ p, li { white-space: pre-wrap; }
          <string>Telemetry</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
-         <item row="0" column="0">
+         <item row="1" column="0">
           <layout class="QVBoxLayout" name="vlTelemetry" stretch="0">
            <item>
             <widget class="QTabWidget" name="twTelemetry">
@@ -447,49 +459,49 @@ p, li { white-space: pre-wrap; }
                  <property name="title">
                   <string>Info</string>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_10" rowstretch="0,0,0,0,0,0" columnstretch="3,0,0,0">
-                  <item row="2" column="0">
+                 <layout class="QGridLayout" name="gridLayout_10" rowstretch="0,0,0,0,0,0,0" columnstretch="3,0,0,0">
+                  <item row="3" column="0">
                    <widget class="QLabel" name="lFrameMajorFrame_2">
                     <property name="text">
                      <string>Major Frame</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="2" column="2">
+                  <item row="3" column="2">
                    <widget class="QLabel" name="lFrameMinorFrame">
                     <property name="text">
                      <string>Minor Frame</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="2">
+                  <item row="1" column="2">
                    <widget class="QLabel" name="lFrameSpacecraft">
                     <property name="text">
                      <string>Spacecraft:</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="0" colspan="2">
+                  <item row="4" column="0" colspan="2">
                    <widget class="QComboBox" name="cbFrameMajorFrame"/>
                   </item>
-                  <item row="0" column="0">
+                  <item row="1" column="0">
                    <widget class="QLabel" name="lFrameMajorFrame">
                     <property name="text">
                      <string>#Major Frames</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="0" column="3">
+                  <item row="1" column="3">
                    <widget class="QLabel" name="lFrameSpacecraftID">
                     <property name="text">
                      <string>NOAA-19 (N')</string>
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="2" colspan="2">
+                  <item row="4" column="2" colspan="2">
                    <widget class="QComboBox" name="cbFrameMinorFrame"/>
                   </item>
-                  <item row="0" column="1">
+                  <item row="1" column="1">
                    <widget class="QLabel" name="lFrameMajorFrameNum">
                     <property name="text">
                      <string>6331</string>
@@ -504,11 +516,28 @@ p, li { white-space: pre-wrap; }
                  <property name="title">
                   <string>Detail</string>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_5">
+                 <layout class="QGridLayout" name="gridLayout_5" columnstretch="3,2,3,2,0" columnminimumwidth="0,200,0,0,0">
+                  <property name="sizeConstraint">
+                   <enum>QLayout::SetDefaultConstraint</enum>
+                  </property>
                   <item row="0" column="0">
                    <widget class="QLabel" name="lFrameTimestampText">
                     <property name="text">
                      <string>Timestamp</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="1">
+                   <widget class="QLabel" name="lFrameScore">
+                    <property name="text">
+                     <string>100%</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QLabel" name="lFrameScoreText">
+                    <property name="text">
+                     <string>Score</string>
                     </property>
                    </widget>
                   </item>
@@ -519,8 +548,53 @@ p, li { white-space: pre-wrap; }
                     </property>
                    </widget>
                   </item>
-                  <item row="3" column="0" colspan="2">
-                   <widget class="QTableView" name="tvFrameDetail"/>
+                  <item row="4" column="0" colspan="5">
+                   <widget class="QTextBrowser" name="textFrame">
+                    <property name="font">
+                     <font>
+                      <family>Bitstream Vera Sans Mono</family>
+                      <pointsize>10</pointsize>
+                     </font>
+                    </property>
+                    <property name="lineWrapMode">
+                     <enum>QTextEdit::NoWrap</enum>
+                    </property>
+                    <property name="html">
+                     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Bitstream Vera Sans Mono'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Bitstream Vera Sans'; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QLabel" name="lFrameFramesText">
+                    <property name="text">
+                     <string>Frames</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QLabel" name="lFrameFilteredText">
+                    <property name="text">
+                     <string>Filtered Frames</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="3">
+                   <widget class="QLabel" name="lFrameFiltered">
+                    <property name="text">
+                     <string>0</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="3">
+                   <widget class="QLabel" name="lFrameFrames">
+                    <property name="text">
+                     <string>0</string>
+                    </property>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
@@ -555,6 +629,18 @@ p, li { white-space: pre-wrap; }
        </widget>
       </widget>
       <widget class="QPlainTextEdit" name="tbProcess">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="font">
+        <font>
+         <family>Bitstream Vera Sans Mono</family>
+         <pointsize>10</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
+        </font>
+       </property>
        <property name="readOnly">
         <bool>true</bool>
        </property>
@@ -571,7 +657,7 @@ p, li { white-space: pre-wrap; }
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>631</width>
+     <width>711</width>
      <height>24</height>
     </rect>
    </property>
@@ -593,6 +679,10 @@ p, li { white-space: pre-wrap; }
      <string>&amp;Settings</string>
     </property>
     <addaction name="actionConsole_Output"/>
+    <addaction name="separator"/>
+    <addaction name="actionDemod"/>
+    <addaction name="actionDecoder"/>
+    <addaction name="actionAnalyzer"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
@@ -626,6 +716,26 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Console Output</string>
+   </property>
+  </action>
+  <action name="actionTelemetry">
+   <property name="text">
+    <string>Telemetry</string>
+   </property>
+  </action>
+  <action name="actionDemod">
+   <property name="text">
+    <string>Demodulator</string>
+   </property>
+  </action>
+  <action name="actionAnalyzer">
+   <property name="text">
+    <string>Analyzer</string>
+   </property>
+  </action>
+  <action name="actionDecoder">
+   <property name="text">
+    <string>Decoder</string>
    </property>
   </action>
  </widget>
@@ -895,11 +1005,75 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>97</x>
-     <y>249</y>
+     <y>213</y>
     </hint>
     <hint type="destinationlabel">
      <x>1</x>
      <y>135</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbFrameMinorFrame</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onMinorFrameChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>569</x>
+     <y>214</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>24</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAnalyzer</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>tbAnalyzeSettings_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDecoder</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>tbDecodeSettings_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>395</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDemod</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>tbDemodSettings_clicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>395</y>
     </hint>
    </hints>
   </connection>
@@ -920,5 +1094,6 @@ p, li { white-space: pre-wrap; }
   <slot>onAbout()</slot>
   <slot>onLicense()</slot>
   <slot>onMajorFrameChanged()</slot>
+  <slot>onMinorFrameChanged()</slot>
  </slots>
 </ui>

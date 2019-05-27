@@ -251,11 +251,17 @@ class MajorFrame:
     filter_num: ClassVar[int] = 0
     filter_method: ClassVar[str] = 'unfiltered'
 
-    first_count = None
+    # Minor frame count of first not none frame
+    first_count: int = None
 
-    last_count = None
+    # Minor frame count number of last not none frame
+    last_count: int = None
 
-    REFERENCE_FRAME = 0
+    # Number of not None minor frames
+    num = 0
+
+    # Reference frame to evaluate spacecraft id and major frame count
+    REFERENCE_FRAME: int = 0
 
     def __init__(self, __minor_frames: List[MinorFrame]):
 
@@ -267,6 +273,8 @@ class MajorFrame:
 
         if __minor_frames is None:
             raise ValueError
+
+        self.num = len(__minor_frames)
 
         self.first_count = __minor_frames[0].get_count().data
 
@@ -324,9 +332,10 @@ class MajorFrame:
                     self.minor_frames[i] = None
 
         # Select new reference frame for infos (should be the same for all frames)
+        self.REFERENCE_FRAME = 0
         while not self.minor_frames[self.REFERENCE_FRAME]:
             self.REFERENCE_FRAME += 1
-            if self.REFERENCE_FRAME > 320:
+            if self.REFERENCE_FRAME > 320 or self.REFERENCE_FRAME >= len(self.minor_frames):
                 self.REFERENCE_FRAME = 0
                 break
 
@@ -347,7 +356,7 @@ class MajorFrame:
         :rtype: intself.first_count+1
         :return: Number of total minor frames
         """
-        return sum(x is not None for x in self.saved_minor_frames)
+        return self.num
 
     def get_score(self) -> float:
         """
@@ -380,18 +389,18 @@ class MajorFrame:
 
         return self.minor_frames[self.REFERENCE_FRAME].get_status().data.major_frame_count
 
-    def get_timestamp(self) -> Union[datetime.datetime, bool]:
+    def get_timestamp(self) -> str:
         """
         :rtype: datetime
         :return datetime. Day of the year and UTC spacecraft time
         """
         if not self.minor_frames[0]:
-            return False
+            return 'Unknown'
 
         if not self.minor_frames[0].get_timestamp():
-            return False
+            return 'Unknown'
 
-        return self.minor_frames[0].get_timestamp().data
+        return str(self.minor_frames[0].get_timestamp().data)[0:-7]
 
     # SEM-2 data accumulation and transfer are synchronized to the spacecraft's 32 second Major
     # Frame. The Major Frame consists of 320 0.1 second Minor Frames, and SEM-2 is assigned two
@@ -497,7 +506,7 @@ class MajorFrame:
             for minor_frame in self.minor_frames:
                 if  minor_frame:
                     s += minor_frame.report(verbose-1)
-
+        s += "\n### RAW Major Frame ###"
         s += '\n' + "%s: %s" % ("ID    ", self.get_spacraft())
         s += '\n' + "%s: %s" % ("Count ", self.get_count())
         s += '\n' + "%s: %s" % ("Time  ", self.get_timestamp())

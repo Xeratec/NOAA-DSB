@@ -61,11 +61,17 @@ class Telemetry():
         :param filenpath: Filepath to file with minor frames
         """
 
+        # Reset
+        self.main.cbFrameMajorFrame.clear()
+        self.main.cbFrameMinorFrame.clear()
+
         # Progress bar in GUI
         progress = self.main.bpAnalyzer
         progress.setValue(0)
 
         self.main.append_output("Process %s\n" % filenpath)
+        self.main.status_text.setText("Process %s" % filenpath)
+
 
         rawStream = open(filenpath).readlines()
 
@@ -101,13 +107,22 @@ class Telemetry():
 
         progress.setValue(progress.maximum())
 
-        # TODO Filter frames based on settings
+        filter_method = 'unfiltered'
+        if self.main.analyze_filter == 1:
+            filter_method = 'parity'
+        elif self.main.analyze_filter == 2:
+            filter_method = 'full'
+
         for major_frame in self.major_frames:
-            major_frame.filter('unfiltered')
+            major_frame.filter(filter_method)
+
+            # Remove empty frames due to filtering
+            if major_frame.get_minor_frame_count() == major_frame.get_filter_stats()[1]:
+                self.major_frames.remove(major_frame)
 
         # Show result in console
         self.main.append_output(str(self.major_frames[0].get_filter_stats()[0])+'\n')
-        self.main.append_output(str(self.major_frames))
+        self.main.append_output(str(self.major_frames)+'\n')
 
         self.main.status_text.setText("Found %d major frames" % len(self.major_frames))
 
@@ -180,12 +195,39 @@ class Telemetry():
 
         return minor_frame_filter
 
-    def set_minor_frame_combobox(self):
-        self.main.cbFrameMinorFrame.clear()
-        for minor_frame in self.major_frames[self.main.cbFrameMajorFrame.currentIndex()].minor_frames:
-            if not minor_frame:
-                continue
-            self.main.cbFrameMinorFrame.addItem(str(minor_frame.get_count().data))
+    def update_major_frame_infos(self):
+        if self.main.cbFrameMajorFrame.currentText().isnumeric():
+            # Delete all Minor Frames
+            self.main.cbFrameMinorFrame.clear()
+
+            # Add new minor frames
+            for minor_frame in self.major_frames[self.main.cbFrameMajorFrame.currentIndex()].minor_frames:
+                if not minor_frame:
+                    continue
+                self.main.cbFrameMinorFrame.addItem(str(minor_frame.get_count().data))
+
+            major_frame = self.major_frames[self.main.cbFrameMajorFrame.currentIndex()]
+            # Display timestamp
+            timestamp = major_frame.get_timestamp()
+            self.main.lFrameTimestamp.setText(str(timestamp))
+
+            # Display total number of frames
+            frames = major_frame.get_minor_frame_count()
+            self.main.lFrameFrames.setText(str(frames))
+
+            # Display number of filtered frames
+            filter_num = major_frame.get_filter_stats()[1]
+            self.main.lFrameFiltered.setText(str(filter_num))
+
+            # Display score
+            score = major_frame.get_score()
+            self.main.lFrameScore.setText("%2.2f%%" % score)
+
+    def update_minor_frame_infos(self):
+        if self.main.cbFrameMinorFrame.currentText().isnumeric():
+            minor_frame = self.major_frames[self.main.cbFrameMajorFrame.currentIndex()]\
+                .minor_frames[int(self.main.cbFrameMinorFrame.currentText())]
+            self.main.textFrame.setPlainText(minor_frame.report(self.main.analyze_log_level))
 
 
 

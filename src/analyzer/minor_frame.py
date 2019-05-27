@@ -376,23 +376,23 @@ class MinorFrame(object):
         :return parity: int. Validity of information
         :return data: string. spacecraft name
         """
-        spacecraft = self.syncword[-4]
+        spacecraft = int(self.syncword[-4:].to01(),2)
 
         r = self.Data()
 
         # May be 8 not clear, different sources
         if spacecraft == 8:
             r.parity = True if self.get_parity().data[0] else False
-            r.data = "NOAA-15"
+            r.data = "NOAA-15 (K)"
         elif spacecraft == 13:
             r.parity = True if self.get_parity().data[0] else False
-            r.data = "NOAA-18"
+            r.data = "NOAA-18 (N)"
         elif spacecraft == 15:
             r.parity = True if self.get_parity().data[0] else False
-            r.data = "NOAA-19"
+            r.data = "NOAA-19 (N')"
         else:
             r.parity = True if self.get_parity().data[0] else False
-            r.data = "NOAA-19"
+            r.data = "UFO (%d)" % int(spacecraft)
 
         return r
 
@@ -467,7 +467,7 @@ class MinorFrame(object):
         hms = datetime.timedelta(days=day_count, milliseconds=hour_minute_second)
 
         r = self.Data()
-        r.parity = True if self.get_parity().data[0]  else False
+        r.parity = True if self.get_parity().data[0] else False
         r.data = hms
 
         return r
@@ -595,10 +595,22 @@ class MinorFrame(object):
 
     def report(self, verbose: int = 0):
         s = ""
+        s += "### RAW Minor Frame ###"
+        s += "\nType         |P| Data   (P Parity)"
+        s += "\n-------------------------------------------------------"
+        s += '\n' + self.__str_debug(self.get_spacraft(), "ID        ")
+        s += '\n' + self.__str_debug(self.get_parity(), "Parity    ")
+        s += '\n' + self.__str_debug(self.get_status(), "Status    ")
+        s += '\n' + self.__str_debug(self.get_count(), "Count     ")
+        s += '\n' + self.__str_debug(self.get_timestamp(), "Time      ")
+        s += '\n' + self.__str_debug(self.get_dwell_address(), "Dwell     ")
+        s += '\n' + self.__str_debug(self.get_cpu_data_status(), "CPU Status")
+        s += '\n\n'
+
         if verbose > 0:
-            s += "### RAW Frame Object ###"
+            s += "### RAW Minor Frame Data ###"
             s += '\n' + "Type    | Len | Data"
-            s += '\n' + "---------------------"
+            s += '\n' + "-----------------------------------------------"
             s += '\n' + self.__str_debug(self.raw, "RAW     ")
             s += '\n' + self.__str_debug(self.syncword, "Sync    ")
             s += '\n' + self.__str_debug(self.status, "Status  ")
@@ -623,20 +635,7 @@ class MinorFrame(object):
             s += '\n' + self.__str_debug(self.miu_data, "MIU     ")
             s += '\n' + self.__str_debug(self.cpu_data_status, "CPU Stat")
             s += '\n' + self.__str_debug(self.parity, "Parity  ")
-            s += '\n\n'
-
-        s += "### RAW Frame Object Functions ###"
-        s += "\nType         |P| Data   (P Parity)"
-        s += "\n---------------------"
-        s += '\n' + self.__str_debug(self.get_spacraft(), "ID        ")
-        s += '\n' + self.__str_debug(self.get_parity(), "Parity    ")
-        s += '\n' + self.__str_debug(self.get_status(), "Status    ")
-        s += '\n' + self.__str_debug(self.get_count(), "Count     ")
-        s += '\n' + self.__str_debug(self.get_timestamp(), "Time      ")
-        s += '\n' + self.__str_debug(self.get_dwell_address(), "Dwell     ")
-        s += '\n' + self.__str_debug(self.get_cpu_data_status(), "CPU Status")
-        # s += '\n' + self.__str_debug(self.get_hirs(), "HIRS    ")
-        s += '\n'
+            s += '\n'
 
         return s
 

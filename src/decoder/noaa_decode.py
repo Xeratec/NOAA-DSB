@@ -213,6 +213,9 @@ def main():
     SyncWordInverse = bitarray(SyncWord)
     SyncWordInverse.invert()
 
+    if len(sys.argv) ==1:
+        usage(copyright=1)
+
     # Process Options
     ops = ['-f', '-c', '-v', '-i', '-o']
 
@@ -234,7 +237,7 @@ def main():
 
     # Grab file data
     try:
-        filedescriptor = open(filename, "r")# Help
+        filedescriptor = open(filename, "r")
         rawInput = np.fromfile(filedescriptor, dtype=np.float32, count=num)
         filedescriptor.close()
 
