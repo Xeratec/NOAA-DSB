@@ -230,7 +230,7 @@ for frame=1:numel(minorFrameID)
         %check if the counter is more than the number of ms per day (bad data)
         if((bitshift(bitand(minorFrames(frame,9+1),bin2dec('111')),24) + bitshift(minorFrames(frame,10+1),16) + bitshift(minorFrames(frame,11+1),8) + minorFrames(frame,12+1)) < 86400000)
             dayMSeconds(idx) = (bitshift(bitand(minorFrames(frame,9+1),bin2dec('111')),24) + bitshift(minorFrames(frame,10+1),16) + bitshift(minorFrames(frame,11+1),8) + minorFrames(frame,12+1));
-            fprintf([num2str(FrameTime(frame,1)) ' Local Seconds is ' num2str(dayMSeconds(idx)/1000.0) ' Spacecraft Day Seconds' ]);
+            fprintf(['Frame: ', num2str(frame), ' ',num2str(FrameTime(frame,1)) ' Local Seconds is ' num2str(dayMSeconds(idx)/1000.0) ' Spacecraft Day Seconds' ]);
             
             hour = floor(dayMSeconds(idx)/(1000*60*60));
             minute = floor((dayMSeconds(idx)/(1000*60*60) - hour)*60);
@@ -1200,229 +1200,229 @@ axis([0 max(FrameTime(:,1)) -0.1 515]);
 % end
 % 
 % 
-% %% SEM - Pull SEM bytes from format into two streams
-% %(one stream for each embedded byte)
-% minorFrameID = bitor(bitshift(bitand(minorFrames(:,5),1),8),minorFrames(:,6));
-% SEMdata(:,1) = 255 - (minorFrames(:,20+1)); %SEM data appears to be inverted! *is it possible that MSB and LSB are interchanged?
-% SEMdata(:,2) = 255 - (minorFrames(:,21+1)); %SEM data appears to be inverted! *Double check this (parity calcs showed this to be an issue)
-% 
-% %% SEM - Pull out SEM data MEPED "Medium Energy Proton and Electron Detector"
-% %MEPED Digital A data consists of six directional proton measurements and three directional electron measurements for each of two directions of incidence (0 and 90 degrees) and four omni-directional proton measurements. All but the two highest energy omni-directional proton measurements are read out every two seconds. The two highest energy omnidirectional proton measurements are read out every four seconds. The MEPED Digital A data and readout rates are summarized in Table 4.3.4.2-2.
-% clear MEPED_0P1 MEPED_0P2 MEPED_0P3 MEPED_0P4 MEPED_0P5 MEPED_0P6;
-% clear MEPED_0E1 MEPED_0E2 MEPED_0E3 MEPED_9E1 MEPED_9E2 MEPED_9E3
-% clear MEPED_9P1 MEPED_9P2 MEPED_9P3 MEPED_9P4 MEPED_9P5 MEPED_9P6;
-% clear MEPED_P6 MEPED_P7 MEPED_P8 MEPED_P9
-% 
-% MEPED_0P1(1)=0; MEPED_0P2(1)=0; MEPED_0P3(1)=0; MEPED_0P4(1)=0; MEPED_0P5(1)=0; MEPED_0P6(1)=0;
-% MEPED_9P1(1)=0; MEPED_9P2(1)=0; MEPED_9P3(1)=0; MEPED_9P4(1)=0; MEPED_9P5(1)=0; MEPED_9P6(1)=0;
-% MEPED_0E1(1)=0; MEPED_0E2(1)=0; MEPED_0E3(1)=0; MEPED_9E1(1)=0; MEPED_9E2(1)=0; MEPED_9E3(1)=0;
-% MEPED_P6(1)=0; MEPED_P7(1)=0; MEPED_P8(1)=0; MEPED_P9(1)=0;
-% 
-% 
-% for frame=1:numel(minorFrameID)
-%     %if(minorFrameID(frame) == 0)
-%     %    day=bitshift(minorFrames(frame,8+1),1)+bitshift(bitor(minorFrames(frame,9+1),128),-7); %should be 241 for loproto2 recording        
-%         %fprintf([num2str(day) ' ' num2str(dec2hex(minorFrames(frame,8+1))) ' ' num2str(dec2hex(minorFrames(frame,9+1))) '\n\n']);
-%     %    fprintf([num2str(day) '\n\n']);
-%         
-%     %end
-%     if(mod(minorFrameID(frame),20) == 0)
-%         MEPED_0P1(end+1) = SEMdata(frame,2);
-%     elseif(mod(minorFrameID(frame)-1,20) == 0)
-%         MEPED_0P2(end+1) = SEMdata(frame,1);
-%         MEPED_0P3(end+1) = SEMdata(frame,2);
-%     elseif(mod(minorFrameID(frame)-2,20) == 0)
-%         MEPED_0P4(end+1) = SEMdata(frame,1);
-%         MEPED_0P5(end+1) = SEMdata(frame,2);
-%     elseif(mod(minorFrameID(frame)-3,20) == 0)
-%         MEPED_0P6(end+1) = SEMdata(frame,1);
-%         MEPED_0E1(end+1) = SEMdata(frame,2);
-%     elseif(mod(minorFrameID(frame)-4,20) == 0)
-%         MEPED_0E2(end+1) = SEMdata(frame,1);
-%         MEPED_0E3(end+1) = SEMdata(frame,2);    
-%     elseif(mod(minorFrameID(frame)-5,20) == 0)
-%         MEPED_9P1(end+1) = SEMdata(frame,1);
-%         MEPED_9P2(end+1) = SEMdata(frame,2);    
-%     elseif(mod(minorFrameID(frame)-6,20) == 0)
-%         MEPED_9P3(end+1) = SEMdata(frame,1);
-%         MEPED_9P4(end+1) = SEMdata(frame,2);        
-%     elseif(mod(minorFrameID(frame)-7,20) == 0)
-%         MEPED_9P5(end+1) = SEMdata(frame,1);
-%         MEPED_9P6(end+1) = SEMdata(frame,2);
-%     elseif(mod(minorFrameID(frame)-8,20) == 0)
-%         MEPED_9E1(end+1) = SEMdata(frame,1);
-%         MEPED_9E2(end+1) = SEMdata(frame,2);
-%     elseif(mod(minorFrameID(frame)-9,20) == 0)
-%         MEPED_9E3(end+1) = SEMdata(frame,1);
-%         MEPED_P6(end+1) = SEMdata(frame,2);
-%     elseif(mod(minorFrameID(frame)-10,20) == 0)
-%         MEPED_P7(end+1) = SEMdata(frame,1);        
-%     end
-%     if(mod(minorFrameID(frame)-10,40) == 0)        
-%         MEPED_P8(end+1) = SEMdata(frame,2);
-%     end
-%     if(mod(minorFrameID(frame)-30,40) == 0)        
-%         MEPED_P9(end+1) = SEMdata(frame,2);
-%     end
-% end
-% %% SEM - Filter MEPED data
-% %remove bits that change too much over a single period (fail a lookhead and
-% %behind test)
-% FilterThreshold = 20;
-% 
-% for idx=2:numel(MEPED_0E1)-1
-%    if(abs(MEPED_0E1(idx-1) - MEPED_0E1(idx)) > FilterThreshold && abs(MEPED_0E1(idx+1) - MEPED_0E1(idx)) > FilterThreshold)
-%       MEPED_0E1(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0E2)-1
-%    if(abs(MEPED_0E2(idx-1) - MEPED_0E2(idx)) > FilterThreshold && abs(MEPED_0E2(idx+1) - MEPED_0E2(idx)) > FilterThreshold)
-%       MEPED_0E2(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0E3)-1
-%   if(abs(MEPED_0E3(idx-1) - MEPED_0E3(idx)) > FilterThreshold && abs(MEPED_0E3(idx+1) - MEPED_0E3(idx)) > FilterThreshold)
-%       MEPED_0E3(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9E1)-1
-%    if(abs(MEPED_9E1(idx-1) - MEPED_9E1(idx)) > FilterThreshold && abs(MEPED_9E1(idx+1) - MEPED_9E1(idx)) > FilterThreshold)
-%       MEPED_9E1(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9E2)-1
-%    if(abs(MEPED_9E2(idx-1) - MEPED_9E2(idx)) > FilterThreshold && abs(MEPED_9E2(idx+1) - MEPED_9E2(idx)) > FilterThreshold)
-%       MEPED_9E2(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9E3)-1
-%    if(abs(MEPED_9E3(idx-1) - MEPED_9E3(idx)) > FilterThreshold && abs(MEPED_9E3(idx+1) - MEPED_9E3(idx)) > FilterThreshold)
-%       MEPED_9E3(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0P1)-1
-%    if(abs(MEPED_0P1(idx-1) - MEPED_0P1(idx)) > FilterThreshold && abs(MEPED_0P1(idx+1) - MEPED_0P1(idx)) > FilterThreshold)
-%       MEPED_0P1(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0P2)-1
-%    if(abs(MEPED_0P2(idx-1) - MEPED_0P2(idx)) > FilterThreshold && abs(MEPED_0P2(idx+1) - MEPED_0P2(idx)) > FilterThreshold)
-%       MEPED_0P2(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0P3)-1
-%   if(abs(MEPED_0P3(idx-1) - MEPED_0P3(idx)) > FilterThreshold && abs(MEPED_0P3(idx+1) - MEPED_0P3(idx)) > FilterThreshold)
-%       MEPED_0P3(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0P4)-1
-%    if(abs(MEPED_0P4(idx-1) - MEPED_0P4(idx)) > FilterThreshold && abs(MEPED_0P4(idx+1) - MEPED_0P4(idx)) > FilterThreshold)
-%       MEPED_0P4(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0P5)-1
-%    if(abs(MEPED_0P5(idx-1) - MEPED_0P5(idx)) > FilterThreshold && abs(MEPED_0P5(idx+1) - MEPED_0P5(idx)) > FilterThreshold)
-%       MEPED_0P5(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_0P6)-1
-%    if(abs(MEPED_0P6(idx-1) - MEPED_0P6(idx)) > FilterThreshold && abs(MEPED_0P6(idx+1) - MEPED_0P6(idx)) > FilterThreshold)
-%       MEPED_0P6(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9P1)-1
-%    if(abs(MEPED_9P1(idx-1) - MEPED_9P1(idx)) > FilterThreshold && abs(MEPED_9P1(idx+1) - MEPED_9P1(idx)) > FilterThreshold)
-%       MEPED_9P1(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9P2)-1
-%    if(abs(MEPED_9P2(idx-1) - MEPED_9P2(idx)) > FilterThreshold && abs(MEPED_9P2(idx+1) - MEPED_9P2(idx)) > FilterThreshold)
-%       MEPED_9P2(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9P3)-1
-%   if(abs(MEPED_9P3(idx-1) - MEPED_9P3(idx)) > FilterThreshold && abs(MEPED_9P3(idx+1) - MEPED_9P3(idx)) > FilterThreshold)
-%       MEPED_9P3(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9P4)-1
-%    if(abs(MEPED_9P4(idx-1) - MEPED_9P4(idx)) > FilterThreshold && abs(MEPED_9P4(idx+1) - MEPED_9P4(idx)) > FilterThreshold)
-%       MEPED_9P4(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9P5)-1
-%    if(abs(MEPED_9P5(idx-1) - MEPED_9P5(idx)) > FilterThreshold && abs(MEPED_9P5(idx+1) - MEPED_9P5(idx)) > FilterThreshold)
-%       MEPED_9P5(idx) = 0;
-%    end
-% end
-% 
-% for idx=2:numel(MEPED_9P6)-1
-%    if(abs(MEPED_9P6(idx-1) - MEPED_9P6(idx)) > FilterThreshold && abs(MEPED_9P6(idx+1) - MEPED_9P6(idx)) > FilterThreshold)
-%       MEPED_9P6(idx) = 0;
-%    end
-% end
-% 
-% %% SEM - Plot MEPED data
-% figure(9);
-% 
-% subplot(3,2,1);
-% plot(1:numel(MEPED_0E1),MEPED_0E1,1:numel(MEPED_0E2),MEPED_0E2,1:numel(MEPED_0E3),MEPED_0E3);
-% title('0 Degree Electron Count');
-% h_legend=legend('>=30 keV Electrons/2sec','>=100 keV Electrons/2sec','>=300 keV Electrons/2sec');
-% set(h_legend,'FontSize',8);
-% set(h_legend,'Location','best');
-% axis([1 numel(MEPED_P6) -0.5 256]);
-% 
-% subplot(3,2,2);
-% plot(1:numel(MEPED_9E1),MEPED_9E1,1:numel(MEPED_9E2),MEPED_9E2,1:numel(MEPED_9E3),MEPED_9E3);
-% title('90 Degree Electron Count');
-% h_legend=legend('>=30 keV Electrons/2sec','>=100 keV Electrons/2sec','>=300 keV Electrons/2sec');
-% set(h_legend,'FontSize',8);
-% set(h_legend,'Location','best');
-% axis([1 numel(MEPED_P6) -0.5 256]);
-% 
-% subplot(3,2,3);
-% plot(1:numel(MEPED_0P1),MEPED_0P1,1:numel(MEPED_0P2),MEPED_0P2,1:numel(MEPED_0P3),MEPED_0P3,1:numel(MEPED_0P4),MEPED_0P4,1:numel(MEPED_0P5),MEPED_0P5,1:numel(MEPED_0P6),MEPED_0P6);
-% title('0 Degree Proton Count');
-% h_legend=legend('30-80keV Protons/2sec','80-250keV Protons/2sec','250-800keV Protons/2sec','800-2.5k keV Protons/2sec','2.5k-7k keV Protons/2sec','>7k keV Protons/2sec');
-% set(h_legend,'FontSize',8);
-% set(h_legend,'Location','best');
-% axis([1 numel(MEPED_P6) -0.5 256]);
-% 
-% subplot(3,2,4);
-% plot(1:numel(MEPED_9P1),MEPED_9P1,1:numel(MEPED_9P2),MEPED_9P2,1:numel(MEPED_9P3),MEPED_9P3,1:numel(MEPED_9P4),MEPED_9P4,1:numel(MEPED_9P5),MEPED_9P5,1:numel(MEPED_9P6),MEPED_9P6);
-% title('90 Degree Proton Count');
-% h_legend=legend('30-80keV Protons/2sec','80-250keV Protons/2sec','250-800keV Protons/2sec','800-2.5k keV Protons/2sec','2.5k-7k keV Protons/2sec','>7k keV Protons/2sec');
-% set(h_legend,'FontSize',8);
-% set(h_legend,'Location','best');
-% axis([1 numel(MEPED_P6) -0.5 256]);
-% 
-% subplot(3,1,3);
-% plot(1:numel(MEPED_P6),MEPED_P6,1:numel(MEPED_P7),MEPED_P7,1:2:numel(MEPED_P8)*2,MEPED_P8,1:2:numel(MEPED_P9)*2,MEPED_P9);
-% title('Omni Proton Count');
-% h_legend=legend('>=16 MeV Protons/2sec','>=35 Mev Protons/2sec','>=70 Mev Protons/2sec','>=140 Mev Protons/2sec');
-% set(h_legend,'FontSize',8);
-% set(h_legend,'Location','best');
-% axis([1 numel(MEPED_P6) -0.5 256]);
-% 
-% suptitle('SEM: Multiple Energy Proton/Electron Detector');
-% 
+%% SEM - Pull SEM bytes from format into two streams
+%(one stream for each embedded byte)
+minorFrameID = bitor(bitshift(bitand(minorFrames(:,5),1),8),minorFrames(:,6));
+SEMdata(:,1) = 255 - (minorFrames(:,20+1)); %SEM data appears to be inverted! *is it possible that MSB and LSB are interchanged?
+SEMdata(:,2) = 255 - (minorFrames(:,21+1)); %SEM data appears to be inverted! *Double check this (parity calcs showed this to be an issue)
+
+%% SEM - Pull out SEM data MEPED "Medium Energy Proton and Electron Detector"
+%MEPED Digital A data consists of six directional proton measurements and three directional electron measurements for each of two directions of incidence (0 and 90 degrees) and four omni-directional proton measurements. All but the two highest energy omni-directional proton measurements are read out every two seconds. The two highest energy omnidirectional proton measurements are read out every four seconds. The MEPED Digital A data and readout rates are summarized in Table 4.3.4.2-2.
+clear MEPED_0P1 MEPED_0P2 MEPED_0P3 MEPED_0P4 MEPED_0P5 MEPED_0P6;
+clear MEPED_0E1 MEPED_0E2 MEPED_0E3 MEPED_9E1 MEPED_9E2 MEPED_9E3
+clear MEPED_9P1 MEPED_9P2 MEPED_9P3 MEPED_9P4 MEPED_9P5 MEPED_9P6;
+clear MEPED_P6 MEPED_P7 MEPED_P8 MEPED_P9
+
+MEPED_0P1(1)=0; MEPED_0P2(1)=0; MEPED_0P3(1)=0; MEPED_0P4(1)=0; MEPED_0P5(1)=0; MEPED_0P6(1)=0;
+MEPED_9P1(1)=0; MEPED_9P2(1)=0; MEPED_9P3(1)=0; MEPED_9P4(1)=0; MEPED_9P5(1)=0; MEPED_9P6(1)=0;
+MEPED_0E1(1)=0; MEPED_0E2(1)=0; MEPED_0E3(1)=0; MEPED_9E1(1)=0; MEPED_9E2(1)=0; MEPED_9E3(1)=0;
+MEPED_P6(1)=0; MEPED_P7(1)=0; MEPED_P8(1)=0; MEPED_P9(1)=0;
+
+
+for frame=1:numel(minorFrameID)
+    %if(minorFrameID(frame) == 0)
+    %    day=bitshift(minorFrames(frame,8+1),1)+bitshift(bitor(minorFrames(frame,9+1),128),-7); %should be 241 for loproto2 recording        
+        %fprintf([num2str(day) ' ' num2str(dec2hex(minorFrames(frame,8+1))) ' ' num2str(dec2hex(minorFrames(frame,9+1))) '\n\n']);
+    %    fprintf([num2str(day) '\n\n']);
+        
+    %end
+    if(mod(minorFrameID(frame),20) == 0)
+        MEPED_0P1(end+1) = SEMdata(frame,2);
+    elseif(mod(minorFrameID(frame)-1,20) == 0)
+        MEPED_0P2(end+1) = SEMdata(frame,1);
+        MEPED_0P3(end+1) = SEMdata(frame,2);
+    elseif(mod(minorFrameID(frame)-2,20) == 0)
+        MEPED_0P4(end+1) = SEMdata(frame,1);
+        MEPED_0P5(end+1) = SEMdata(frame,2);
+    elseif(mod(minorFrameID(frame)-3,20) == 0)
+        MEPED_0P6(end+1) = SEMdata(frame,1);
+        MEPED_0E1(end+1) = SEMdata(frame,2);
+    elseif(mod(minorFrameID(frame)-4,20) == 0)
+        MEPED_0E2(end+1) = SEMdata(frame,1);
+        MEPED_0E3(end+1) = SEMdata(frame,2);    
+    elseif(mod(minorFrameID(frame)-5,20) == 0)
+        MEPED_9P1(end+1) = SEMdata(frame,1);
+        MEPED_9P2(end+1) = SEMdata(frame,2);    
+    elseif(mod(minorFrameID(frame)-6,20) == 0)
+        MEPED_9P3(end+1) = SEMdata(frame,1);
+        MEPED_9P4(end+1) = SEMdata(frame,2);        
+    elseif(mod(minorFrameID(frame)-7,20) == 0)
+        MEPED_9P5(end+1) = SEMdata(frame,1);
+        MEPED_9P6(end+1) = SEMdata(frame,2);
+    elseif(mod(minorFrameID(frame)-8,20) == 0)
+        MEPED_9E1(end+1) = SEMdata(frame,1);
+        MEPED_9E2(end+1) = SEMdata(frame,2);
+    elseif(mod(minorFrameID(frame)-9,20) == 0)
+        MEPED_9E3(end+1) = SEMdata(frame,1);
+        MEPED_P6(end+1) = SEMdata(frame,2);
+    elseif(mod(minorFrameID(frame)-10,20) == 0)
+        MEPED_P7(end+1) = SEMdata(frame,1);        
+    end
+    if(mod(minorFrameID(frame)-10,40) == 0)        
+        MEPED_P8(end+1) = SEMdata(frame,2);
+    end
+    if(mod(minorFrameID(frame)-30,40) == 0)        
+        MEPED_P9(end+1) = SEMdata(frame,2);
+    end
+end
+%% SEM - Filter MEPED data
+%remove bits that change too much over a single period (fail a lookhead and
+%behind test)
+FilterThreshold = 20;
+
+for idx=2:numel(MEPED_0E1)-1
+   if(abs(MEPED_0E1(idx-1) - MEPED_0E1(idx)) > FilterThreshold && abs(MEPED_0E1(idx+1) - MEPED_0E1(idx)) > FilterThreshold)
+      MEPED_0E1(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0E2)-1
+   if(abs(MEPED_0E2(idx-1) - MEPED_0E2(idx)) > FilterThreshold && abs(MEPED_0E2(idx+1) - MEPED_0E2(idx)) > FilterThreshold)
+      MEPED_0E2(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0E3)-1
+  if(abs(MEPED_0E3(idx-1) - MEPED_0E3(idx)) > FilterThreshold && abs(MEPED_0E3(idx+1) - MEPED_0E3(idx)) > FilterThreshold)
+      MEPED_0E3(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9E1)-1
+   if(abs(MEPED_9E1(idx-1) - MEPED_9E1(idx)) > FilterThreshold && abs(MEPED_9E1(idx+1) - MEPED_9E1(idx)) > FilterThreshold)
+      MEPED_9E1(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9E2)-1
+   if(abs(MEPED_9E2(idx-1) - MEPED_9E2(idx)) > FilterThreshold && abs(MEPED_9E2(idx+1) - MEPED_9E2(idx)) > FilterThreshold)
+      MEPED_9E2(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9E3)-1
+   if(abs(MEPED_9E3(idx-1) - MEPED_9E3(idx)) > FilterThreshold && abs(MEPED_9E3(idx+1) - MEPED_9E3(idx)) > FilterThreshold)
+      MEPED_9E3(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0P1)-1
+   if(abs(MEPED_0P1(idx-1) - MEPED_0P1(idx)) > FilterThreshold && abs(MEPED_0P1(idx+1) - MEPED_0P1(idx)) > FilterThreshold)
+      MEPED_0P1(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0P2)-1
+   if(abs(MEPED_0P2(idx-1) - MEPED_0P2(idx)) > FilterThreshold && abs(MEPED_0P2(idx+1) - MEPED_0P2(idx)) > FilterThreshold)
+      MEPED_0P2(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0P3)-1
+  if(abs(MEPED_0P3(idx-1) - MEPED_0P3(idx)) > FilterThreshold && abs(MEPED_0P3(idx+1) - MEPED_0P3(idx)) > FilterThreshold)
+      MEPED_0P3(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0P4)-1
+   if(abs(MEPED_0P4(idx-1) - MEPED_0P4(idx)) > FilterThreshold && abs(MEPED_0P4(idx+1) - MEPED_0P4(idx)) > FilterThreshold)
+      MEPED_0P4(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0P5)-1
+   if(abs(MEPED_0P5(idx-1) - MEPED_0P5(idx)) > FilterThreshold && abs(MEPED_0P5(idx+1) - MEPED_0P5(idx)) > FilterThreshold)
+      MEPED_0P5(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_0P6)-1
+   if(abs(MEPED_0P6(idx-1) - MEPED_0P6(idx)) > FilterThreshold && abs(MEPED_0P6(idx+1) - MEPED_0P6(idx)) > FilterThreshold)
+      MEPED_0P6(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9P1)-1
+   if(abs(MEPED_9P1(idx-1) - MEPED_9P1(idx)) > FilterThreshold && abs(MEPED_9P1(idx+1) - MEPED_9P1(idx)) > FilterThreshold)
+      MEPED_9P1(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9P2)-1
+   if(abs(MEPED_9P2(idx-1) - MEPED_9P2(idx)) > FilterThreshold && abs(MEPED_9P2(idx+1) - MEPED_9P2(idx)) > FilterThreshold)
+      MEPED_9P2(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9P3)-1
+  if(abs(MEPED_9P3(idx-1) - MEPED_9P3(idx)) > FilterThreshold && abs(MEPED_9P3(idx+1) - MEPED_9P3(idx)) > FilterThreshold)
+      MEPED_9P3(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9P4)-1
+   if(abs(MEPED_9P4(idx-1) - MEPED_9P4(idx)) > FilterThreshold && abs(MEPED_9P4(idx+1) - MEPED_9P4(idx)) > FilterThreshold)
+      MEPED_9P4(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9P5)-1
+   if(abs(MEPED_9P5(idx-1) - MEPED_9P5(idx)) > FilterThreshold && abs(MEPED_9P5(idx+1) - MEPED_9P5(idx)) > FilterThreshold)
+      MEPED_9P5(idx) = 0;
+   end
+end
+
+for idx=2:numel(MEPED_9P6)-1
+   if(abs(MEPED_9P6(idx-1) - MEPED_9P6(idx)) > FilterThreshold && abs(MEPED_9P6(idx+1) - MEPED_9P6(idx)) > FilterThreshold)
+      MEPED_9P6(idx) = 0;
+   end
+end
+
+%% SEM - Plot MEPED data
+figure(9);
+
+subplot(3,2,1);
+plot(1:numel(MEPED_0E1),MEPED_0E1,1:numel(MEPED_0E2),MEPED_0E2,1:numel(MEPED_0E3),MEPED_0E3);
+title('0 Degree Electron Count');
+h_legend=legend('>=30 keV Electrons/2sec','>=100 keV Electrons/2sec','>=300 keV Electrons/2sec');
+set(h_legend,'FontSize',8);
+set(h_legend,'Location','best');
+axis([1 numel(MEPED_P6) -0.5 256]);
+
+subplot(3,2,2);
+plot(1:numel(MEPED_9E1),MEPED_9E1,1:numel(MEPED_9E2),MEPED_9E2,1:numel(MEPED_9E3),MEPED_9E3);
+title('90 Degree Electron Count');
+h_legend=legend('>=30 keV Electrons/2sec','>=100 keV Electrons/2sec','>=300 keV Electrons/2sec');
+set(h_legend,'FontSize',8);
+set(h_legend,'Location','best');
+axis([1 numel(MEPED_P6) -0.5 256]);
+
+subplot(3,2,3);
+plot(1:numel(MEPED_0P1),MEPED_0P1,1:numel(MEPED_0P2),MEPED_0P2,1:numel(MEPED_0P3),MEPED_0P3,1:numel(MEPED_0P4),MEPED_0P4,1:numel(MEPED_0P5),MEPED_0P5,1:numel(MEPED_0P6),MEPED_0P6);
+title('0 Degree Proton Count');
+h_legend=legend('30-80keV Protons/2sec','80-250keV Protons/2sec','250-800keV Protons/2sec','800-2.5k keV Protons/2sec','2.5k-7k keV Protons/2sec','>7k keV Protons/2sec');
+set(h_legend,'FontSize',8);
+set(h_legend,'Location','best');
+axis([1 numel(MEPED_P6) -0.5 256]);
+
+subplot(3,2,4);
+plot(1:numel(MEPED_9P1),MEPED_9P1,1:numel(MEPED_9P2),MEPED_9P2,1:numel(MEPED_9P3),MEPED_9P3,1:numel(MEPED_9P4),MEPED_9P4,1:numel(MEPED_9P5),MEPED_9P5,1:numel(MEPED_9P6),MEPED_9P6);
+title('90 Degree Proton Count');
+h_legend=legend('30-80keV Protons/2sec','80-250keV Protons/2sec','250-800keV Protons/2sec','800-2.5k keV Protons/2sec','2.5k-7k keV Protons/2sec','>7k keV Protons/2sec');
+set(h_legend,'FontSize',8);
+set(h_legend,'Location','best');
+axis([1 numel(MEPED_P6) -0.5 256]);
+
+subplot(3,1,3);
+plot(1:numel(MEPED_P6),MEPED_P6,1:numel(MEPED_P7),MEPED_P7,1:2:numel(MEPED_P8)*2,MEPED_P8,1:2:numel(MEPED_P9)*2,MEPED_P9);
+title('Omni Proton Count');
+h_legend=legend('>=16 MeV Protons/2sec','>=35 Mev Protons/2sec','>=70 Mev Protons/2sec','>=140 Mev Protons/2sec');
+set(h_legend,'FontSize',8);
+set(h_legend,'Location','best');
+axis([1 numel(MEPED_P6) -0.5 256]);
+
+suptitle('SEM: Multiple Energy Proton/Electron Detector');
+
 % %% SEM - Pull out SEM data TED "Total Energy Detector"
 % %TED Digital A data consists of a 0.05 to 1 keV partial energy flux measurement, a 1 to 20 keV partial energy flux measurement, maximum differential energy fluxes, four-point differential energy spectra and background measurements for electrons and protons, each at two angles of incidence (0 and 30 degrees).
 % 

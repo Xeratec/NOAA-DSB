@@ -32,7 +32,6 @@ philip.wiese@maketec.ch
 
 TODO
 * Improve frame filter and slicer
-* Stop running demodulator and decoder if application is closed
 * Statistics
 * SEM Graph
 """
@@ -91,11 +90,11 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         self.create_status_bar()
 
         if DEBUG:
-            self.textDemodInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/recordings/samples/POES_56k250.raw")
-            self.textDemodOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/demod.raw")
-            self.textDecodeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/demod.raw")
-            self.textDecodeOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/NOAA.txt")
-            self.textAnalyzeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/NOAA_DSB_MinorFrames.txt")
+            self.textDemodInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/recordings/raw/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12.raw")
+            self.textDemodOutput.setPlainText("/home/xeratec/Dokumente/demod.raw")
+            self.textDecodeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/recordings/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12_demod.raw")
+            self.textDecodeOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/recordings/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12.txt")
+            self.textAnalyzeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/recordings/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12/NOAA-19_DSB_137-7700Mhz_2019-05-19_15-49-12.txt")
 
         self.twCentral.setCurrentIndex(0)
     #
@@ -225,6 +224,7 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     #
     @pyqtSlot()
     def run_demod(self):
+        self.reader.close()
         script = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'demodulator/noaa_demodulate.py')
         cmd = ['-u', script, '-v', str(self.demod_log_level),'-r', str(self.demod_baud_rate), '-f', self.textDemodInput.toPlainText(), '-o', self.textDemodOutput.toPlainText()]
 
@@ -232,12 +232,14 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
 
     @pyqtSlot()
     def run_decode(self):
+        self.reader.close()
         script = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'decoder/noaa_decode.py')
         cmd = ['-u', script, '-v', str(self.decode_log_level), '-i',str(self.decode_input_format),'-f', self.textDecodeInput.toPlainText(), '-o', self.textDecodeOutput.toPlainText()]
         self.reader.start('python3', cmd)
 
     @pyqtSlot()
     def run_analyze(self):
+        self.reader.close()
         self.telemetry.load_file(self.textAnalyzeInput.toPlainText())
 
     #
@@ -264,6 +266,13 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         msg.setWindowTitle("License")
         msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msg.exec_()
+
+    #
+    # Event Handler
+    #
+    def closeEvent(self, event):
+        self.reader.close()
+        print("Exit")
 
     def onMajorFrameChanged(self, int):
         self.telemetry.update_major_frame_infos()
@@ -334,7 +343,8 @@ def main():
     app = QtWidgets.QApplication(sys.argv)  # A new instance of QApplication
     form = NOAA_DSB()                  # We set the form to be our ExampleApp (design)
     form.show()                         # Show the form
-    app.exec_()                         # and execute the app
+    app.exec_()
+    # and execute the app
 
 if __name__ == '__main__':              # if we're running file directly and not importing it
     main()                              # run the main function    app.exec_()

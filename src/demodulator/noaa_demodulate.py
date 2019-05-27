@@ -154,6 +154,7 @@ def main():
         print "Processing file: %s" % filename
 
     if verbose > 1:
+
         print 'Size: %d bits' % size
 
     if verbose > 0:
@@ -161,11 +162,12 @@ def main():
         print "Save ouput to %s" % outputFilename
 
     if verbose > 0:
+        print(size//1e6)
         def _progress_bar():
-            with tqdm(total=100) as pbar:
-                for i in range(100):
-                    time.sleep(size/(1000.0*sampleRate*24*6.7))
-                    pbar.update(1)
+            with tqdm(total=1, unit_scale=size//1e7, unit='Mbit') as pbar:
+                for i in range(999):
+                    time.sleep(size/(10000.0*sampleRate*24*7.5))
+                    pbar.update(.001)
 
 
         _progress_bar_thread = threading.Thread(target=_progress_bar)

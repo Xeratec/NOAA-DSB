@@ -459,7 +459,7 @@ p, li { white-space: pre-wrap; }
                  <property name="title">
                   <string>Info</string>
                  </property>
-                 <layout class="QGridLayout" name="gridLayout_10" rowstretch="0,0,0,0,0,0,0" columnstretch="3,0,0,0">
+                 <layout class="QGridLayout" name="gridLayout_10" rowstretch="0,0,0,0,0,0,0" columnstretch="3,2,3,2">
                   <item row="3" column="0">
                    <widget class="QLabel" name="lFrameMajorFrame_2">
                     <property name="text">
@@ -496,6 +496,9 @@ p, li { white-space: pre-wrap; }
                     <property name="text">
                      <string>NOAA-19 (N')</string>
                     </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                    </property>
                    </widget>
                   </item>
                   <item row="4" column="2" colspan="2">
@@ -505,6 +508,9 @@ p, li { white-space: pre-wrap; }
                    <widget class="QLabel" name="lFrameMajorFrameNum">
                     <property name="text">
                      <string>6331</string>
+                    </property>
+                    <property name="alignment">
+                     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                     </property>
                    </widget>
                   </item>
@@ -748,8 +754,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDemodOpen_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
-     <y>137</y>
+     <x>637</x>
+     <y>143</y>
     </hint>
     <hint type="destinationlabel">
      <x>459</x>
@@ -764,8 +770,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDecodeOpen_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
-     <y>296</y>
+     <x>637</x>
+     <y>327</y>
     </hint>
     <hint type="destinationlabel">
      <x>587</x>
@@ -780,8 +786,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbAnalyzeOpen_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
-     <y>454</y>
+     <x>637</x>
+     <y>510</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -796,8 +802,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDemodSelect_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
-     <y>174</y>
+     <x>637</x>
+     <y>186</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -812,8 +818,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbDecodeSelect_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
-     <y>333</y>
+     <x>637</x>
+     <y>370</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -828,8 +834,8 @@ p, li { white-space: pre-wrap; }
    <slot>pbAnalyzeSelect_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>557</x>
-     <y>491</y>
+     <x>637</x>
+     <y>553</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -860,8 +866,8 @@ p, li { white-space: pre-wrap; }
    <slot>tbDemodSettings_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>596</x>
-     <y>137</y>
+     <x>676</x>
+     <y>143</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -876,8 +882,8 @@ p, li { white-space: pre-wrap; }
    <slot>tbDecodeSettings_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>596</x>
-     <y>296</y>
+     <x>676</x>
+     <y>327</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -892,8 +898,8 @@ p, li { white-space: pre-wrap; }
    <slot>tbAnalyzeSettings_clicked()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>596</x>
-     <y>454</y>
+     <x>676</x>
+     <y>510</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -924,8 +930,8 @@ p, li { white-space: pre-wrap; }
    <slot>run_decode()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>596</x>
-     <y>369</y>
+     <x>676</x>
+     <y>412</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -940,8 +946,8 @@ p, li { white-space: pre-wrap; }
    <slot>run_analyze()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>596</x>
-     <y>527</y>
+     <x>676</x>
+     <y>595</y>
     </hint>
     <hint type="destinationlabel">
      <x>630</x>
@@ -1095,5 +1101,6 @@ p, li { white-space: pre-wrap; }
   <slot>onLicense()</slot>
   <slot>onMajorFrameChanged()</slot>
   <slot>onMinorFrameChanged()</slot>
+  <slot>onDestroy()</slot>
  </slots>
 </ui>
