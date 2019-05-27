@@ -68,6 +68,8 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
 
     # Reference to telemetry module, handling the analyzation of the data
     telemetry = None
+    widgetStats = None
+    widgetSEM = None
 
     def __init__(self):
         super(self.__class__, self).__init__()
@@ -78,9 +80,12 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         from gui.telemetry import Telemetry
 
         # Setting up Statistics, SEM and Telemetry
-        ui_stats = stats_widget.StatsWidget(self.wStats)
-        ui_sem = sem_widget.SEMWidget(self.wSEM)
-        self.telemetry = Telemetry(widgetStats=ui_stats, widgetSEM=ui_sem, mainWindow=self)
+        self.widgetStats = stats_widget.StatsWidget(self.wStats)
+
+        self.wSEM = sem_widget.SEMWidget()
+        self.gridLayout_13.addWidget(self.wSEM, 0, 0, 1, 1)
+
+        self.telemetry = Telemetry(mainWindow=self)
 
         # create a process output reader
         self.reader = ProcessOutputReader()
@@ -241,6 +246,7 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     def run_analyze(self):
         self.reader.close()
         self.telemetry.load_file(self.textAnalyzeInput.toPlainText())
+        self.tabTelemetry.setEnabled(True)
 
     #
     # Menu entry
@@ -272,7 +278,6 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     #
     def closeEvent(self, event):
         self.reader.close()
-        print("Exit")
 
     def onMajorFrameChanged(self, int):
         self.telemetry.update_major_frame_infos()

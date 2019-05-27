@@ -28,12 +28,15 @@ Contact:
 philip.wiese@maketec.ch
 """
 
+from typing import List
 from PyQt5 import QtCore, QtGui, QtWidgets
 import design_stats
+from analyzer.major_frame import MajorFrame
+from analyzer.minor_frame import MinorFrame
 
 
 class StatsWidget(QtWidgets.QWidget, design_stats.Ui_Form):
     def __init__(self, Form):
         super(self.__class__, self).__init__()
-        self.setupUi(Form)  # This is defined in design.py file automatically
-                            # It sets up layout and widgets that are defined
+        self.setupUi(Form)
+

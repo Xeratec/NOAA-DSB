@@ -31,42 +31,151 @@ philip.wiese@maketec.ch
 import time
 
 import numpy as np
+from typing import List
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import (
-        FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
+    FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT as NavigationToolbar, FigureCanvasQTAgg)
+from matplotlib.legend import Legend
 
+from analyzer.major_frame import MajorFrame
+from analyzer.major_frame import MEPED
 
 import design_sem
 
-
 class SEMWidget(QtWidgets.QWidget, design_sem.Ui_Form):
-    def __init__(self, Form):
+
+
+    legend1: Legend = None
+    legend2: Legend = None
+
+    meped_canvas1: FigureCanvasQTAgg
+    all_data = None
+
+    def __init__(self):
         super(self.__class__, self).__init__()
-        self.setupUi(Form)  # This is defined in design.py file automatically
-                            # It sets up layout and widgets that are defined
+        self.setupUi(self)
 
-        static_canvas = FigureCanvas(Figure(figsize=(5, 3)))
-        self.gridLayout.addWidget(static_canvas)
-        # self.addToolBar(NavigationToolbar(static_canvas, self))
+        self.meped_canvas1 = FigureCanvas(Figure(figsize=(5, 3)))
+        self.gridLayout.addWidget(self.meped_canvas1, 3, 0,1,2)
+        self.gridLayout.addWidget(NavigationToolbar(self.meped_canvas1, self), 2,0,1,2)
+        self.meped_ax1 = self.meped_canvas1.figure.subplots()
+        self.meped_canvas1.figure.subplots_adjust(top=1.0,bottom=0.14,left=0.06,right=0.995,hspace=0.2,wspace=0.2)
 
-        dynamic_canvas = FigureCanvas(Figure(figsize=(5, 3)))
-        self.gridLayout.addWidget(dynamic_canvas)
-        # self.addToolBar(QtCore.Qt.BottomToolBarArea,NavigationToolbar(dynamic_canvas, self))
+        self.meped_canvas2 = FigureCanvas(Figure(figsize=(5, 3)))
+        self.gridLayout.addWidget(self.meped_canvas2, 5, 0,1,2)
+        self.gridLayout.addWidget(NavigationToolbar(self.meped_canvas2, self), 4, 0, 1, 2)
+        self.meped_ax2 = self.meped_canvas2.figure.subplots()
+        self.meped_canvas2.figure.subplots_adjust(top=1.0,bottom=0.14,left=0.06,right=0.995,hspace=0.2,wspace=0.2)
 
-        self._static_ax = static_canvas.figure.subplots()
-        t = np.linspace(0, 10, 501)
-        self._static_ax.plot(t, np.tan(t), ".")
+    def onSourceChange(self):
+        self.draw_data()
 
-        self._dynamic_ax = dynamic_canvas.figure.subplots()
-        self._timer = dynamic_canvas.new_timer(
-            100, [(self._update_canvas, (), {})])
-        self._timer.start()
+    def set_data(self,major_frames: List[MajorFrame]):
+        self.all_data = MEPED()
 
-    def _update_canvas(self):
-        self._dynamic_ax.clear()
-        t = np.linspace(0, 10, 101)
-        # Shift the sinusoid as a function of time.
-        self._dynamic_ax.plot(t, np.sin(t + time.time()))
-        self._dynamic_ax.figure.canvas.draw()
+        for major_frame in major_frames:
+            meped = major_frame.get_sem_meped()
+            self.all_data.MEPED_0P1 += meped.MEPED_0P1
+            self.all_data.MEPED_0P2 += meped.MEPED_0P2
+            self.all_data.MEPED_0P3 += meped.MEPED_0P3
+            self.all_data.MEPED_0P4 += meped.MEPED_0P4
+            self.all_data.MEPED_0P5 += meped.MEPED_0P5
+            self.all_data.MEPED_0P6 += meped.MEPED_0P6
+
+            self.all_data.MEPED_0E1 += meped.MEPED_0E1
+            self.all_data.MEPED_0E2 += meped.MEPED_0E2
+            self.all_data.MEPED_0E3 += meped.MEPED_0E3
+
+            self.all_data.MEPED_9P1 += meped.MEPED_9P1
+            self.all_data.MEPED_9P2 += meped.MEPED_9P2
+            self.all_data.MEPED_9P3 += meped.MEPED_9P3
+            self.all_data.MEPED_9P4 += meped.MEPED_9P4
+            self.all_data.MEPED_9P5 += meped.MEPED_9P5
+            self.all_data.MEPED_9P6 += meped.MEPED_9P6
+
+            self.all_data.MEPED_9E1 = meped.MEPED_9E1
+            self.all_data.MEPED_9E2 = meped.MEPED_9E2
+            self.all_data.MEPED_9E3 = meped.MEPED_9E3
+
+            self.all_data.MEPED_P6 = meped.MEPED_P6
+            self.all_data.MEPED_P7 = meped.MEPED_P7
+            self.all_data.MEPED_P8 = meped.MEPED_P8
+            self.all_data.MEPED_P9 = meped.MEPED_P9
+
+
+    def draw_data(self):
+        self.meped_ax1.clear()
+        self.meped_ax2.clear()
+
+        if self.cbSource.currentIndex() == 0:
+            self.meped_ax1.set_title("Proton Telescope 0 Degrees")
+            l_MEPED_0P1 = np.arange(0, len(self.all_data.MEPED_0P1))
+            l_MEPED_0P2 = np.arange(0, len(self.all_data.MEPED_0P2))
+            l_MEPED_0P3 = np.arange(0, len(self.all_data.MEPED_0P3))
+            l_MEPED_0P4 = np.arange(0, len(self.all_data.MEPED_0P4))
+            l_MEPED_0P5 = np.arange(0, len(self.all_data.MEPED_0P5))
+            l_MEPED_0P6 = np.arange(0, len(self.all_data.MEPED_0P6))
+
+            self.meped_ax1.plot(l_MEPED_0P1, self.all_data.MEPED_0P1, label="30-80 keV")
+            self.meped_ax1.plot(l_MEPED_0P2, self.all_data.MEPED_0P2, label="80-250 keV")
+            self.meped_ax1.plot(l_MEPED_0P3, self.all_data.MEPED_0P3, label="250-800 keV")
+            self.meped_ax1.plot(l_MEPED_0P4, self.all_data.MEPED_0P4, label="800-2500 keV")
+            self.meped_ax1.plot(l_MEPED_0P5, self.all_data.MEPED_0P5, label="2500-7000 keV")
+            self.meped_ax1.plot(l_MEPED_0P6, self.all_data.MEPED_0P6, label="> 7000 keV")
+
+            self.meped_ax2.set_title("Proton Telescope 90 Degrees")
+            l_MEPED_9P1 = np.arange(0, len(self.all_data.MEPED_9P1))
+            l_MEPED_9P2 = np.arange(0, len(self.all_data.MEPED_9P2))
+            l_MEPED_9P3 = np.arange(0, len(self.all_data.MEPED_9P3))
+            l_MEPED_9P4 = np.arange(0, len(self.all_data.MEPED_9P4))
+            l_MEPED_9P5 = np.arange(0, len(self.all_data.MEPED_9P5))
+            l_MEPED_9P6 = np.arange(0, len(self.all_data.MEPED_9P6))
+
+            self.meped_ax2.plot(l_MEPED_9P1, self.all_data.MEPED_9P1, label="30-80 keV")
+            self.meped_ax2.plot(l_MEPED_9P2, self.all_data.MEPED_9P2, label="80-250 keV")
+            self.meped_ax2.plot(l_MEPED_9P3, self.all_data.MEPED_9P3, label="250-800 keV")
+            self.meped_ax2.plot(l_MEPED_9P4, self.all_data.MEPED_9P4, label="800-2500 keV")
+            self.meped_ax2.plot(l_MEPED_9P5, self.all_data.MEPED_9P5, label="2500-7000 keV")
+            self.meped_ax2.plot(l_MEPED_9P6, self.all_data.MEPED_9P6, label="> 7000 keV")
+
+        if self.cbSource.currentIndex() == 1:
+            self.meped_ax1.set_title("Electron Telescope 0 Degrees")
+            l_meped_0E1 = np.arange(0, len(self.all_data.MEPED_0E1))
+            l_meped_0E2 = np.arange(0, len(self.all_data.MEPED_0E2))
+            l_meped_0E3 = np.arange(0, len(self.all_data.MEPED_0E3))
+
+            self.meped_ax1.plot(l_meped_0E1, self.all_data.MEPED_0E1, label="≥ 30 keV")
+            self.meped_ax1.plot(l_meped_0E2, self.all_data.MEPED_0E2, label="≥ 100 keV")
+            self.meped_ax1.plot(l_meped_0E3, self.all_data.MEPED_0E3, label="≥ 300 keV")
+
+            self.meped_ax2.set_title("Electron Telescope 90 Degrees")
+            l_meped_9E1 = np.arange(0, len(self.all_data.MEPED_9E1))
+            l_meped_9E2 = np.arange(0, len(self.all_data.MEPED_9E2))
+            l_meped_9E3 = np.arange(0, len(self.all_data.MEPED_9E3))
+        
+            self.meped_ax2.plot(l_meped_9E1, self.all_data.MEPED_9E1, label="≥ 30 keV")
+            self.meped_ax2.plot(l_meped_9E2, self.all_data.MEPED_9E2, label="≥ 100 keV")
+            self.meped_ax2.plot(l_meped_9E3, self.all_data.MEPED_9E3, label="≥ 300 keV")
+
+        if self.cbSource.currentIndex() == 2:
+            self.meped_ax1.set_title("Proton Omnidirectional")
+            l_meped_P6 = np.arange(0, len(self.all_data.MEPED_P6))
+            l_meped_P7 = np.arange(0, len(self.all_data.MEPED_P7))
+            l_meped_P8 = np.arange(0, 2*len(self.all_data.MEPED_P8),2)
+            l_meped_P9 = np.arange(0, 2*len(self.all_data.MEPED_P9),2)
+            self.meped_ax2.set_title("Proton Omnidirectional")
+            self.meped_ax1.plot(l_meped_P6, self.all_data.MEPED_P6, label="≥ 16 MeV")
+            self.meped_ax1.plot(l_meped_P7, self.all_data.MEPED_P7, label="≥ 35 MeV")
+            self.meped_ax2.plot(l_meped_P8, self.all_data.MEPED_P8, label="≥ 70 MeV")
+            self.meped_ax2.plot(l_meped_P9, self.all_data.MEPED_P9, label="≥ 140 MeV")
+
+        if self.legend1:
+            self.legend1.remove()
+        self.legend1 = self.meped_ax1.figure.legend(fontsize=7)
+        if self.legend2:
+            self.legend2.remove()
+        self.legend2 = self.meped_ax2.figure.legend(fontsize=8)
+        self.meped_ax1.figure.canvas.draw()
+        self.meped_ax2.figure.canvas.draw()

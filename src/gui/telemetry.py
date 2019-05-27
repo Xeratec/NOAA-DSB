@@ -40,18 +40,13 @@ from noaa_dsb import NOAA_DSB
 
 class Telemetry():
     main: ClassVar[NOAA_DSB] = None
-    wStats: ClassVar[QtWidgets.QWidget] = None
-    wSEM: ClassVar[QtWidgets.QWidget] = None
 
     major_frames: List[MajorFrame] = None
 
     COUNT_THRESHOLD = 100
 
-    def __init__(self, widgetStats: QtWidgets.QWidget, widgetSEM: QtWidgets.QWidget, mainWindow: NOAA_DSB):
+    def __init__(self, mainWindow: NOAA_DSB):
         self.main = mainWindow
-        self.wStats = widgetStats
-        self.wSEM = widgetSEM
-
         self.main.lFrameMajorFrameNum.setText(str(0))
 
     def load_file(self, filenpath: str):
@@ -132,6 +127,10 @@ class Telemetry():
 
         for major_frame in self.major_frames:
             self.main.cbFrameMajorFrame.addItem(str(major_frame.get_count()))
+
+        # Set SEM MEPED Data
+        self.main.wSEM.set_data(major_frames=self.major_frames)
+        self.main.wSEM.draw_data()
 
         # Switch to Telemetry - Statistics Tab
         self.main.twCentral.setCurrentIndex(1)

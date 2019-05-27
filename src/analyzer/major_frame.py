@@ -68,6 +68,34 @@ class MEPED:
         self.MEPED_P8 = []
         self.MEPED_P9 = []
 
+    def __iadd__(self, other):
+        self.MEPED_0P1 += other.MEPED_0P1
+        self.MEPED_0P2 += other.MEPED_0P2
+        self.MEPED_0P3 += other.MEPED_0P3
+        self.MEPED_0P4 += other.MEPED_0P4
+        self.MEPED_0P5 += other.MEPED_0P5
+        self.MEPED_0P6 += other.MEPED_0P6
+
+        self.MEPED_0E1 += other.MEPED_0E1
+        self.MEPED_0E2 += other.MEPED_0E2
+        self.MEPED_0E3 += other.MEPED_0E3
+
+        self.MEPED_9P1 += other.MEPED_9P1
+        self.MEPED_9P2 += other.MEPED_9P2
+        self.MEPED_9P3 += other.MEPED_9P3
+        self.MEPED_9P4 += other.MEPED_9P4
+        self.MEPED_9P5 += other.MEPED_9P5
+        self.MEPED_9P6 += other.MEPED_9P6
+
+        self.MEPED_9E1 += other.MEPED_9E1
+        self.MEPED_9E2 += other.MEPED_9E2
+        self.MEPED_9E3 += other.MEPED_9E3
+
+        self.MEPED_P6 += other.MEPED_P6
+        self.MEPED_P7 += other.MEPED_P7
+        self.MEPED_P8 += other.MEPED_P8
+        self.MEPED_P9 += other.MEPED_P9
+
     MEPED_0P1: List[int] = []
     MEPED_0P2: List[int] = []
     MEPED_0P3: List[int] = []

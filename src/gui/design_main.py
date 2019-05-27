@@ -205,7 +205,7 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
         self.twCentral.addTab(self.tabProcess, "")
         self.tabTelemetry = QtWidgets.QWidget()
-        self.tabTelemetry.setEnabled(True)
+        self.tabTelemetry.setEnabled(False)
         self.tabTelemetry.setObjectName("tabTelemetry")
         self.gridLayout_4 = QtWidgets.QGridLayout(self.tabTelemetry)
         self.gridLayout_4.setObjectName("gridLayout_4")
@@ -373,7 +373,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.twCentral.setCurrentIndex(1)
+        self.twCentral.setCurrentIndex(0)
         self.twTelemetry.setCurrentIndex(0)
         self.pbDemodOpen.clicked.connect(MainWindow.pbDemodOpen_clicked)
         self.pbDecodeOpen.clicked.connect(MainWindow.pbDecodeOpen_clicked)
