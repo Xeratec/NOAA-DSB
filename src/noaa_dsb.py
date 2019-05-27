@@ -29,7 +29,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Contact:
 philip.wiese@maketec.ch
+
+TODO
+* Integration of Analyzer
 """
+
+
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot, pyqtSignal, QProcess, QTextCodec
@@ -39,8 +44,9 @@ import sys
 import os
 
 from gui import design_main
-from gui import design_stats
-from gui import design_sem
+from gui import sem_widget
+from gui import stats_widget
+
 from gui.settings import design_settings_analyze, design_settings_demod, design_settings_decode
 
 ##### DEBUG ONLY ######
@@ -58,16 +64,19 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
     decode_log_level = 1
     analyze_log_level = 1
 
+    telemetry = None
+
 
     def __init__(self):
         super(self.__class__, self).__init__()
         self.setupUi(self)  # This is defined in design.py file automatically
                             # It sets up layout and widgets that are defined
-        ui_stats = design_stats.Ui_Form()
-        ui_stats.setupUi(self.wStats)
+        ui_stats = stats_widget.StatsWidget(self.wStats)
+        ui_sem = sem_widget.SEMWidget(self.wSEM)
 
-        ui_sem = design_sem.Ui_Form()
-        ui_sem.setupUi(self.wSEM)
+        # To avoid circular dependencies
+        from gui.telemetry import Telemetry
+        self.telemetry = Telemetry(widgetStats=ui_stats, widgetSEM=ui_sem, mainWindow=self)
 
         # create a process output reader
         self.reader = ProcessOutputReader()
@@ -81,6 +90,7 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
             self.textDemodOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/demod.raw")
             self.textDecodeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/demod.raw")
             self.textDecodeOutput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/test/NOAA.txt")
+            self.textAnalyzeInput.setPlainText("/home/xeratec/Projects/NOAA-DSB/src/NOAA_DSB_MinorFrames.txt")
 
     #
     # Initialize statusbar
@@ -214,6 +224,8 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
 
     @pyqtSlot()
     def run_analyze(self):
+        self.telemetry.load_file(self.textAnalyzeInput.toPlainText())
+
         return
 
 
@@ -243,6 +255,9 @@ class NOAA_DSB(QtWidgets.QMainWindow, design_main.Ui_MainWindow):
         msg.setWindowTitle("License")
         msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
         msg.exec_()
+
+    def onMajorFrameChanged(self, int):
+        self.telemetry.set_minor_frame_combobox()
     #
     # Utility
     #

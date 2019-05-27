@@ -60,6 +60,32 @@
        </item>
       </widget>
      </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Filter Method</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="comboBox">
+       <item>
+        <property name="text">
+         <string>Unfiltered</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Parity</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Full</string>
+        </property>
+       </item>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

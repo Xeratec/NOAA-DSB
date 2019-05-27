@@ -413,6 +413,20 @@ class MinorFrame(object):
 
         return r
 
+
+    def get_major_count(self) -> Data:
+        """
+        :rtype: Data
+        :return parity: int. Validity of information
+        :return data: Status. major frame count
+        """
+
+        r = self.Data()
+        r.parity = True if self.get_parity().data[0] else False
+        r.data = int(self.status[3:6].to01(), 2)
+
+        return r
+
     def get_dwell_address(self) -> Data:
         """
         :rtype: Data

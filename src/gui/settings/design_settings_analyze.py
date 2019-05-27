@@ -32,6 +32,15 @@ class Ui_DialogAnalyzeSettings(object):
         self.cbLogLevel.addItem("")
         self.cbLogLevel.addItem("")
         self.formLayout_3.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.cbLogLevel)
+        self.label = QtWidgets.QLabel(DialogAnalyzeSettings)
+        self.label.setObjectName("label")
+        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.label)
+        self.comboBox = QtWidgets.QComboBox(DialogAnalyzeSettings)
+        self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.formLayout_3.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.comboBox)
         self.gridLayout.addLayout(self.formLayout_3, 0, 1, 1, 1)
 
         self.retranslateUi(DialogAnalyzeSettings)
@@ -48,6 +57,10 @@ class Ui_DialogAnalyzeSettings(object):
         self.cbLogLevel.setItemText(1, _translate("DialogAnalyzeSettings", "Normal", "1"))
         self.cbLogLevel.setItemText(2, _translate("DialogAnalyzeSettings", "Debug", "2"))
         self.cbLogLevel.setItemText(3, _translate("DialogAnalyzeSettings", "All", "3"))
+        self.label.setText(_translate("DialogAnalyzeSettings", "Filter Method"))
+        self.comboBox.setItemText(0, _translate("DialogAnalyzeSettings", "Unfiltered"))
+        self.comboBox.setItemText(1, _translate("DialogAnalyzeSettings", "Parity"))
+        self.comboBox.setItemText(2, _translate("DialogAnalyzeSettings", "Full"))
 
 
 
