@@ -30,6 +30,11 @@ philip.wiese@maketec.ch
 
 import time
 
+import sys
+from pathlib import Path
+sys.path.append(str(Path('./gui').absolute()))
+
+
 import numpy as np
 from typing import List
 

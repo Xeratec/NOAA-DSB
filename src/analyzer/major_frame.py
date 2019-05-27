@@ -32,6 +32,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 Contact:
 philip.wiese@maketec.ch
 """
+import sys
+from pathlib import Path
+sys.path.append(str(Path('./analyzer').absolute()))
 
 from minor_frame import MinorFrame
 from typing import Union, List, ClassVar, Tuple
