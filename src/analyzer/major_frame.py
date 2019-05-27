@@ -249,7 +249,11 @@ class MajorFrame:
     sbuv_2 = None
 
     filter_num: ClassVar[int] = 0
-    filter_method: ClassVar[str] = 'None'
+    filter_method: ClassVar[str] = 'unfiltered'
+
+    first_count = None
+
+    last_count = None
 
     REFERENCE_FRAME = 0
 
@@ -264,11 +268,19 @@ class MajorFrame:
         if __minor_frames is None:
             raise ValueError
 
+        self.first_count = __minor_frames[0].get_count().data
+
+        i = 0
+        while __minor_frames[i].get_count().data > 319:
+            i += 1
+            self.first_count = __minor_frames[i].get_count().data
+
         self.minor_frames: Union[List[MinorFrame], List[None] ] = [None for x in range(320)]
         for i in range(len(__minor_frames)):
             count: int = __minor_frames[i].get_count().data
 
             if count < 320:
+                self.last_count = __minor_frames[i].get_count().data
                 self.minor_frames[count] = __minor_frames[i]
 
         self.saved_minor_frames = self.minor_frames.copy()
@@ -277,6 +289,7 @@ class MajorFrame:
         while not self.saved_minor_frames[self.REFERENCE_FRAME]:
             self.REFERENCE_FRAME +=1
             if self.REFERENCE_FRAME > 320:
+                self.REFERENCE_FRAME = 0
                 break
 
     def filter(self, method: str = 'parity'):
@@ -295,6 +308,11 @@ class MajorFrame:
                 continue
 
             frame = self.saved_minor_frames[i]
+
+            # Does this make sense?
+            if frame.get_count().data == 0:
+                continue
+
             self.minor_frames[i] = frame
             if method == 'parity':
                 if not frame.get_parity().parity:
@@ -304,6 +322,13 @@ class MajorFrame:
                 if not all(frame.get_parity().data):
                     self.filter_num += 1
                     self.minor_frames[i] = None
+
+        # Select new reference frame for infos (should be the same for all frames)
+        while not self.minor_frames[self.REFERENCE_FRAME]:
+            self.REFERENCE_FRAME += 1
+            if self.REFERENCE_FRAME > 320:
+                self.REFERENCE_FRAME = 0
+                break
 
         self.filter_method = method
 
@@ -319,7 +344,7 @@ class MajorFrame:
 
     def get_minor_frame_count(self) -> int:
         """
-        :rtype: int
+        :rtype: intself.first_count+1
         :return: Number of total minor frames
         """
         return sum(x is not None for x in self.saved_minor_frames)
@@ -331,7 +356,8 @@ class MajorFrame:
         """
         n = self.get_minor_frame_count()
         e = self.filter_num
-        p = 100-100 / n * e if n != 0 else 0
+
+        p = 100/320*n*(1 -e / n  if n != 0 else 0)
         return p
 
     def get_spacraft(self) -> Union[bool, str]:
@@ -457,8 +483,9 @@ class MajorFrame:
         return self.report(0)
 
     def __repr__(self):
-        if self.filter_method == 'None':
-            return "\nMajorFrame Count %d, #MF %3d" % (self.get_count(), self.get_minor_frame_count())
+        if self.filter_method == 'unfiltered':
+            return "\nMajorFrame Count %d, #MF %3d, First %3d, Last %3d" % \
+                   (self.get_count(), self.get_minor_frame_count(), self.first_count, self.last_count)
 
         else:
             return "\nMajorFrame Count %d, #MF %3d, #Err %3d, Score %2.2f%%" % \

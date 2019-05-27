@@ -7,25 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>649</width>
-    <height>356</height>
+    <height>446</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QwtPlot" name="qwtPlot"/>
-   </item>
-  </layout>
+  <layout class="QGridLayout" name="gridLayout"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

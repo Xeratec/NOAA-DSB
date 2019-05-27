@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 
 """
-File name: noaa_analyze.py
+File name: stats_widget.py
 Author: Philip Wiese
-Date created: 17.05.2019
-Date last modified: 23.05.2019
+Date created: 27.05.2019
+Date last modified: 27.05.2019
 Python Version: 3
-
-Example:
-    $ python noaa_analyzer.py -f NOAA.txt
 
 License:
 Copyright (C) 2019  Philip Wiese
@@ -31,9 +28,12 @@ Contact:
 philip.wiese@maketec.ch
 """
 
+from PyQt5 import QtCore, QtGui, QtWidgets
+import design_stats
 
-def main():
-    return True
 
-if __name__ == "__main__":
-    main()
+class StatsWidget(QtWidgets.QWidget, design_stats.Ui_Form):
+    def __init__(self, Form):
+        super(self.__class__, self).__init__()
+        self.setupUi(Form)  # This is defined in design.py file automatically
+                            # It sets up layout and widgets that are defined
